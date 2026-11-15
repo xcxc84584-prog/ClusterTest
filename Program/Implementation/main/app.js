@@ -35,6 +35,10 @@ const chunks = createChunkLoaderUI({
   hub: Hub, properties: EDPMU,
   beforeNavigate: () => files.canNavigate(),
   beforeOpen: () => tabs?.beforeOpen(),
+  onHandle: (handle) => {
+    files.setHandle(handle);
+    tabs?.refresh();
+  },
   onLoaded: (data) => {
     files.receive(data);
     viewport?.receive(data);
