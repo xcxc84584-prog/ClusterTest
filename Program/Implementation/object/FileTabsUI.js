@@ -73,6 +73,12 @@ export function createFileTabsUI({
     saveActive();
   }
 
+  function updateSource(file) {
+    if (activeId && tabs.has(activeId)) {
+      tabs.get(activeId).file = file;
+    }
+  }
+
   function opened(data) {
     const existing = [...tabs].find(([, tab]) =>
       tab.file === data.file && data.file);
@@ -138,7 +144,8 @@ export function createFileTabsUI({
     if (activeId) queueMicrotask(refresh);
   });
   return {
-    addCurrent, beforeOpen, opened, select, refresh, closed,
+    addCurrent, beforeOpen, opened, updateSource,
+    select, refresh, closed,
     closeTab,
     list: () => [...tabs].map(([id, tab]) => ({
       id, name: tab.name, active: id === activeId
