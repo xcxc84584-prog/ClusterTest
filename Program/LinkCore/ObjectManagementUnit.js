@@ -11,7 +11,7 @@ export class ObjectManagementUnit {
     const time = this.clock();
     const result = event.result ?? 'PASS';
     const key = JSON.stringify([event.source, event.action]);
-    if (result === 'PASS' && event.kind !== 'EHU') {
+    if (result === 'PASS' && event.kind !== 'EHU' && !['START', 'END'].includes(event.phase)) {
       const last = this.#cooldown.get(key);
       if (last !== undefined && time - last < 1000) return null;
       this.#cooldown.set(key, time);
