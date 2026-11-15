@@ -1,0 +1,1538 @@
+:root {
+  color-scheme:dark;
+  font-family:Inter,'Segoe UI','Microsoft JhengHei',sans-serif;
+  background:#000;
+  color:#d4d6dc
+}
+* {
+  box-sizing:border-box
+}
+html,body,#app {
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden
+}
+#app {
+  display:flex;
+  flex-direction:column
+}
+header {
+  height:55px;
+  flex-shrink:0;
+  background:#202127;
+  border:1px solid #32343c;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+.brand strong {
+  font-size:22px;
+  font-weight:600;
+  color:#f0f0f2
+}
+.brand small {
+  font-size:11px;
+  color:#9aaddd;
+  letter-spacing:1px;
+  margin-left:6px
+}
+.diamond {
+  font-size:29px;
+  color:#728cfb;
+  line-height:1
+}
+.menu-wrap {
+  position:relative
+}
+button,select {
+  background:#343640;
+  border:1px solid #3c3e49;
+  color:#f1f2f5;
+  border-radius:8px;
+  padding:9px 14px;
+  cursor:pointer;
+  font-size:13px
+}
+button:hover {
+  background:#474a58
+}
+nav {
+  position:absolute;
+  right:0;
+  top:40px;
+  z-index:20;
+  min-width:150px;
+  background:#24252c;
+  border:1px solid #434651;
+  border-radius:8px;
+  padding:5px;
+  box-shadow:0 12px 30px #0008
+}
+nav button {
+  display:block;
+  width:100%;
+  text-align:left;
+  border:0;
+  background:transparent;
+  border-radius:4px
+}
+#tabs {
+  height:48px;
+  flex-shrink:0;
+  background:#111216;
+  border-bottom:1px solid #30313b;
+  display:flex;
+  align-items:end;
+  padding:0 14px;
+  gap:4px;
+  overflow-x:auto
+}
+.tab {
+  height:34px;
+  min-width:115px;
+  max-width:220px;
+  padding:0 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#191a20;
+  border:1px solid #333640;
+  border-radius:7px 7px 0 0;
+  color:#a5a8b5;
+  cursor:pointer;
+  font-size:12px
+}
+.tab.active {
+  background:#000;
+  color:#f0f1f4;
+  border-bottom-color:#000
+}
+.tab .name {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex:1
+}
+.tab .close {
+  font-size:16px;
+  color:#9b9da8
+}
+.tab .close:hover {
+  color:white
+}
+main {
+  flex:1;
+  min-height:0;
+  background:#000;
+  position:relative
+}
+#empty {
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding-bottom:25px
+}
+#empty[hidden],#editorPane[hidden],nav[hidden] {
+  display:none!important
+}
+.bigdiamond {
+  font-size:65px;
+  color:#738cfb;
+  line-height:1
+}
+h1 {
+  font-size:34px;
+  font-weight:500;
+  margin:18px 0 12px
+}
+p {
+  font-size:14px;
+  color:#9198ad
+}
+#editorPane {
+  height:100%;
+  display:flex;
+  overflow:hidden
+}
+#gutter {
+  width:60px;
+  flex-shrink:0;
+  text-align:right;
+  white-space:pre;
+  padding:16px 12px 16px 0;
+  background:#08090b;
+  color:#646b7b;
+  border-right:1px solid #22252c;
+  font:14px/22px Consolas,monospace;
+  overflow:hidden
+}
+textarea {
+  flex:1;
+  resize:none;
+  background:#000;
+  color:#e2e4eb;
+  border:0;
+  outline:0;
+  padding:16px;
+  font:14px/22px Consolas,'Microsoft JhengHei',monospace;
+  tab-size:4;
+  white-space:pre;
+  overflow:auto
+}
+footer {
+  height:34px;
+  flex-shrink:0;
+  background:#202127;
+  border-top:1px solid #34353e;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 16px;
+  font-size:10px;
+  color:#e2e5ee
+}
+.chip {
+  background:#343640;
+  border-radius:3px;
+  padding:3px 6px
+}
+.meter {
+  width:100px;
+  height:6px;
+  border:1px solid #4a4c55;
+  border-radius:6px;
+  overflow:hidden
+}
+#meterFill {
+  height:100%;
+  width:0;
+  background:#6d86f7
+}
+footer select {
+  font-size:10px;
+  padding:1px 3px;
+  border-radius:2px;
+  background:#242631
+}
+footer .grow {
+  flex:1
+}
+@media(max-width:650px) {
+  .brand small,.meter,#priority {
+    display:none
+  }
+  footer {
+    gap:6px;
+    padding:0 8px
+  }
+  #gutter {
+    width:43px
+  }
+}
+/* PR(+Opt 3): restrained dark language submenu */
+.menu-divider {
+  height:1px;
+  background:#393b43;
+  margin:5px 8px
+}
+#languageBtn {
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+.menu-arrow {
+  color:#aab2c5;
+  font-size:17px
+}
+#languageOptions {
+  margin:2px 4px 5px;
+  padding:4px;
+  background:#17181d;
+  border:1px solid #383a44;
+  border-radius:6px
+}
+#languageOptions[hidden] {
+  display:none
+}
+#languageOptions button {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 10px
+}
+.locale-check {
+  color:#8ba3ff;
+  font-weight:700
+}
+
+/* Opt 6: Global RGB palette tokens, shared by every UI object. */
+:root {
+  --ui-background: rgb(0, 0, 0);
+  --ui-surface: rgb(32, 33, 39);
+  --ui-panel: rgb(17, 18, 22);
+  --ui-control: rgb(52, 54, 64);
+  --ui-hover: rgb(71, 74, 88);
+  --ui-border: rgb(60, 62, 73);
+  --ui-text: rgb(241, 242, 245);
+  --ui-muted: rgb(165, 168, 181);
+  --ui-editor: rgb(0, 0, 0);
+  --ui-gutter: rgb(8, 9, 11);
+}
+
+:root,
+body,
+#app,
+main,
+textarea {
+  background: var(--ui-background);
+  color: var(--ui-text);
+}
+
+header,
+footer {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+
+#tabs,
+.tab,
+#languageOptions,
+#toolOptions,
+#paletteOptions {
+  background: var(--ui-panel);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+
+.tab.active,
+#empty {
+  background: var(--ui-background);
+  color: var(--ui-text);
+}
+
+.tab .name,
+.brand strong,
+#filename,
+#position,
+#status {
+  color: var(--ui-text);
+}
+
+.tab .close,
+.brand small,
+p,
+#gutter,
+.menu-arrow {
+  color: var(--ui-muted);
+}
+
+#gutter {
+  background: var(--ui-gutter);
+  border-color: var(--ui-border);
+}
+
+textarea {
+  background: var(--ui-editor);
+  color: var(--ui-text);
+}
+
+button,
+select,
+footer select {
+  background: var(--ui-control);
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+}
+
+button:hover {
+  background: var(--ui-hover);
+}
+
+nav {
+  background: var(--ui-surface);
+  border-color: var(--ui-border);
+}
+
+nav button {
+  background: transparent;
+  color: var(--ui-text);
+}
+
+nav button:hover {
+  background: var(--ui-hover);
+}
+
+.menu-divider {
+  background: var(--ui-border);
+}
+
+#toolOptions,
+#paletteOptions {
+  margin: 4px;
+  padding: 6px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+}
+
+#toolOptions[hidden],
+#paletteOptions[hidden] {
+  display: none;
+}
+
+#paletteOptions label {
+  display: block;
+  font-size: 12px;
+  margin: 5px 0;
+}
+
+#palettePicker {
+  width: 100%;
+  height: 34px;
+  cursor: pointer;
+}
+
+.palette-channels,
+.palette-presets {
+  display: flex;
+  gap: 5px;
+}
+
+.palette-channels label {
+  flex: 1;
+  min-width: 0;
+}
+
+.palette-channels input {
+  width: 100%;
+  min-width: 0;
+  padding: 4px;
+  background: var(--ui-background);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+  border-radius: 4px;
+}
+
+.palette-presets button {
+  padding: 6px;
+  text-align: center;
+  font-size: 11px;
+}
+
+/* Opt 6 +1: Cluster-style modal, inheriting the live global palette. */
+#paletteDialog {
+  width: min(480px, calc(100vw - 28px));
+  max-height: min(760px, calc(100vh - 28px));
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  background: var(--ui-surface);
+  color: var(--ui-text-on-surface);
+  box-shadow: 0 28px 90px rgb(0 0 0 / 35%);
+}
+
+#paletteDialog:not([open]) {
+  display: none;
+}
+
+#paletteDialog::backdrop {
+  background: rgb(0 0 0 / 66%);
+  backdrop-filter: blur(3px);
+}
+
+.palette-modal-header,
+.palette-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+}
+
+.palette-modal-header {
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.palette-modal-header h2 {
+  margin: 4px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.palette-eyebrow,
+.palette-preview-caption {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  opacity: 0.8;
+}
+
+.palette-close {
+  min-width: 34px;
+  padding: 5px 9px;
+  font-size: 22px;
+}
+
+.palette-modal-body {
+  display: grid;
+  gap: 16px;
+  padding: 20px 22px;
+}
+
+.palette-preview {
+  height: 122px;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-background);
+  color: var(--ui-text);
+}
+
+.palette-preview-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  color: var(--ui-text-on-surface);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.palette-preview-dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.palette-preview-caption {
+  margin-left: auto;
+}
+
+.palette-preview-content {
+  display: flex;
+  height: 90px;
+}
+
+.palette-preview-sidebar {
+  width: 30%;
+  border-right: 1px solid var(--ui-border);
+  background: var(--ui-panel);
+}
+
+.palette-preview-editor {
+  flex: 1;
+  padding: 16px;
+}
+
+.palette-preview-line {
+  width: 80%;
+  height: 5px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  background: var(--ui-muted);
+  opacity: 0.7;
+}
+
+.palette-preview-line.short {
+  width: 35%;
+}
+
+.palette-preview-line.medium {
+  width: 60%;
+}
+
+.palette-section-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#paletteHex,
+#paletteMode {
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.palette-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+#palettePicker {
+  flex: 0 0 76px;
+  width: 76px;
+  height: 42px;
+  padding: 3px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-control);
+}
+
+.palette-channels,
+.palette-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.palette-presets {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.palette-channels label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.palette-channels input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-control);
+  color: var(--ui-text-on-control);
+}
+
+#paletteDialog button {
+  color: var(--ui-text-on-control);
+}
+
+.palette-presets button {
+  padding: 11px 8px;
+  text-align: center;
+}
+
+.palette-modal-footer {
+  border-top: 1px solid var(--ui-border);
+  font-size: 11px;
+}
+
+#paletteDone {
+  min-width: 88px;
+}
+
+#paletteDialog :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Ensure each text surface uses its own contrast-checked foreground. */
+header,
+footer,
+nav,
+#languageOptions,
+#toolOptions {
+  color: var(--ui-text-on-surface);
+}
+
+#tabs,
+.tab,
+#toolOptions {
+  color: var(--ui-text-on-panel);
+}
+
+button,
+select,
+footer select {
+  color: var(--ui-text-on-control);
+}
+
+nav button {
+  color: var(--ui-text-on-surface);
+}
+
+.brand strong,
+#filename,
+#position,
+#status {
+  color: var(--ui-text-on-surface);
+}
+
+.tab .name {
+  color: inherit;
+}
+
+#paletteDialog .palette-modal-header,
+#paletteDialog .palette-modal-footer {
+  color: var(--ui-text-on-surface);
+}
+
+/* Opt 7: status remains visible even when no operation is running. */
+.sync-label { font-size: 11px; font-weight: 700; min-width: 65px; }
+.meter.indeterminate #meterFill { width: 40% !important; animation: fmc-loading 1.4s ease-in-out infinite alternate; }
+@keyframes fmc-loading { from { transform: translateX(-75%); } to { transform: translateX(180%); } }
+
+/* v0.0.10: recovery prebuild overlay; no additional slice navigation UI. */
+#recoveryPrebuild:not([hidden]) {
+  position: absolute; inset: 0; z-index: 20;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; gap: 14px; padding: 24px;
+  background: var(--bg, #101116); color: var(--text, #e9edf4);
+  text-align: center;
+}
+#workspace { position: relative; }
+#recoveryName { font-size: 18px; overflow-wrap: anywhere; }
+#recoveryStage, #recoveryCount { font-size: 13px; opacity: .85; }
+#recoveryProgress { width: min(460px, 90%); height: 14px; accent-color: #32b9aa; }
+
+/* The jump toolbar is a separate flex row; never overlap editor text. */
+#app { min-height: 0; }
+#workspace { min-height: 0; flex: 1 1 auto; }
+#goLineBar {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 5px 12px;
+  background: #1b1c22;
+  border-top: 1px solid #34353e;
+  color: #e2e5ee;
+  font-size: 12px;
+}
+#goLineInput { width: 92px; max-width: 30vw; }
+#goLineBar button, #goLineInput {
+  border: 1px solid #4a4c55;
+  border-radius: 4px;
+  background: #252831;
+  color: #f2f4f8;
+  padding: 4px 7px;
+}
+#goLineBar button:disabled, #goLineInput:disabled { opacity: .55; }
+.goLineHint { color: #a5adbd; }
+@media (max-width: 520px) {
+  #goLineBar { padding: 4px 8px; }
+  .goLineHint { display: none; }
+}
+
+/* FTI modal shares the global palette and does not overlap editor content. */
+#ftiDialog {
+  color: var(--text, #e8ebf2);
+  background: var(--panel, #171a21);
+  border: 1px solid var(--border, #414754);
+  border-radius: 10px;
+  width: min(460px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 22px;
+  box-shadow: 0 18px 70px #0009;
+}
+#ftiDialog::backdrop { background: #05070bc9; }
+.fti-dialog-head { display: flex; gap: 12px; align-items: center; }
+.fti-symbol { color: #4ea7f5; font-size: 24px; }
+#ftiFileName { overflow-wrap: anywhere; font-weight: 600; }
+#ftiReason, .fti-note { font-size: 13px; line-height: 1.6; color: var(--muted, #a6b0c0); }
+.fti-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.fti-actions button { padding: 8px 12px; border: 1px solid var(--border, #414754); border-radius: 6px; background: var(--panel, #262c36); color: inherit; }
+#ftiForce { background: #246db5; color: white; }
+
+/* Stable footer: progress and status never resize adjacent controls. */
+footer { min-width: 0; overflow: hidden; }
+footer > * { flex-shrink: 0; }
+footer .meter { flex: 0 0 100px; width: 100px; box-sizing: border-box; }
+footer #meterPercent {
+  display: inline-block !important;
+  flex: 0 0 4.5em;
+  width: 4.5em;
+  min-width: 4.5em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+footer #meterPercent[hidden] { visibility: hidden; }
+footer #syncLabel {
+  flex: 0 0 180px;
+  width: 180px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+footer #status {
+  flex: 0 1 240px;
+  width: 240px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+footer #filename {
+  flex: 0 1 160px;
+  width: 160px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+footer #position { flex: 0 0 110px; width: 110px; white-space: nowrap; }
+footer .grow { flex: 1 1 auto; min-width: 0; }
+@media (max-width: 850px) {
+  footer #syncLabel { flex-basis: 125px; width: 125px; }
+  footer #status { flex-basis: 140px; width: 140px; }
+  footer #filename { flex-basis: 110px; width: 110px; }
+}
+@media (max-width: 650px) {
+  footer .meter { display: none; }
+  footer #status { flex-basis: 100px; width: 100px; }
+  footer #syncLabel { flex-basis: 100px; width: 100px; }
+}
+
+/* Editor chrome must consume the global UI_PALETTE contract, not local dark constants. */
+#goLineBar {
+  background: var(--ui-surface);
+  border-top-color: var(--ui-border);
+  color: var(--ui-text-on-surface);
+}
+#goLineBar button,
+#goLineInput {
+  background: var(--ui-control);
+  border-color: var(--ui-border);
+  color: var(--ui-text-on-control);
+}
+#goLineBar button:hover:not(:disabled) { background: var(--ui-hover); }
+#goLineBar .goLineHint { color: var(--ui-text-on-surface); opacity: .75; }
+#goLineBar :focus-visible { outline: 2px solid var(--ui-text-on-surface); outline-offset: 2px; }
+footer {
+  background: var(--ui-surface);
+  border-top-color: var(--ui-border);
+  color: var(--ui-text-on-surface);
+}
+footer .meter { border-color: var(--ui-border); background: var(--ui-panel); }
+footer #meterPercent,
+footer #syncLabel,
+footer #status,
+footer #filename,
+footer #position,
+footer #fileType { color: var(--ui-text-on-surface); }
+footer select { background: var(--ui-control); border-color: var(--ui-border); color: var(--ui-text-on-control); }
+#recoveryPrebuild:not([hidden]) { background: var(--ui-background); color: var(--ui-text); }
+#recoveryProgress { accent-color: var(--ui-accent); }
+#ftiDialog {
+  background: var(--ui-surface);
+  color: var(--ui-text-on-surface);
+  border-color: var(--ui-border);
+}
+#ftiDialog .fti-symbol { color: var(--ui-text-on-surface); }
+#ftiDialog .fti-note,
+#ftiDialog #ftiReason { color: var(--ui-text-on-surface); opacity: .78; }
+#ftiDialog .fti-actions button { background: var(--ui-control); border-color: var(--ui-border); color: var(--ui-text-on-control); }
+#ftiDialog #ftiForce { background: var(--ui-hover); color: var(--ui-text-on-control); font-weight: 700; }
+
+/* v0.0.12+2: grouped, accessible File > Tool controls. */
+#menu { min-width: 236px; padding: 7px; border-radius: 10px; }
+#menu > button, #toolOptions > button { min-height: 34px; padding: 8px 12px; }
+#menu button:focus-visible, #priority:focus-visible {
+  outline: 2px solid var(--ui-accent, #829aff); outline-offset: -2px;
+}
+#toolOptions { margin: 4px 3px; padding: 6px; border: 1px solid var(--ui-border);
+  border-radius: 8px; background: var(--ui-panel); }
+#toolOptions[hidden] { display: none !important; }
+.priority-heading { display: block; padding: 7px 10px 5px; color: var(--ui-muted);
+  font-size: 11px; font-weight: 600; }
+#toolOptions #priority { display: block; width: calc(100% - 12px); margin: 0 6px 6px;
+  padding: 8px 10px; border-radius: 6px; background: var(--ui-control);
+  color: var(--ui-text); border: 1px solid var(--ui-border); }
+@media (max-width: 650px) { #toolOptions #priority { display: block; } }
+
+/* DFOM: viewport mirror draws dashed tab markers without changing file bytes. */
+#editorPane { position: relative; }
+#editorPane textarea { position: relative; z-index: 1; background: transparent; tab-size: 4; }
+#tabGuide { position: absolute; z-index: 0; inset: 0 0 0 60px;
+  overflow: hidden; pointer-events: none; white-space: pre; tab-size: 4;
+  padding: 16px; font: 14px/22px Consolas,'Microsoft JhengHei',monospace;
+  color: transparent; }
+#tabGuide .dfom-tab { position: relative; }
+#tabGuide .dfom-tab::before { content: ''; position: absolute; top: 2px; bottom: 2px;
+  left: 0; border-left: 1px dashed var(--ui-muted, #8793a6); opacity: .7; }
+@media(max-width:650px) { #tabGuide { left: 43px; } }
+
+/* EXPLORER: docked graphite sidebar based on legacy Cluster CEXP. */
+#clusterWorkspaceShell { flex:1; min-height:0; display:flex; overflow:hidden; }
+#clusterEditorColumn { flex:1; min-width:0; display:flex; flex-direction:column; }
+#clusterEditorColumn main { min-height:0; }
+#explorerPanel { width:255px; flex:0 0 255px; min-width:0; display:flex;
+  flex-direction:column; border-right:1px solid var(--ui-border);
+  background:var(--ui-panel); color:var(--ui-text-on-panel); }
+#explorerPanel[hidden] { display:none!important; }
+.explorer-header { min-height:44px; display:flex; align-items:center;
+  justify-content:space-between; padding:8px 10px 8px 15px;
+  border-bottom:1px solid var(--ui-border); font-size:12px; letter-spacing:.6px; }
+.explorer-header button { padding:3px 9px; }
+.explorer-actions { display:flex; gap:5px; padding:8px 10px; }
+.explorer-actions button { flex:1; padding:5px; background:var(--ui-control);
+  color:var(--ui-text-on-control); border:1px solid var(--ui-border); }
+#explorerSearch { width:calc(100% - 20px); margin:0 10px 8px; padding:8px 10px;
+  border:1px solid var(--ui-border); border-radius:5px; outline-offset:1px;
+  background:var(--ui-control); color:var(--ui-text-on-control); font-size:12px; font-family:inherit; }
+#explorerSearch::placeholder { color:var(--ui-muted); }
+#explorerTree { flex:1; min-height:0; overflow:auto; padding-bottom:12px; }
+.explorer-section { padding:11px 12px 6px; font-size:10px; font-weight:700;
+  letter-spacing:.7px; color:var(--ui-muted); }
+.explorer-entry { width:100%; min-height:29px; border:0; border-radius:0;
+  background:transparent; color:var(--ui-text-on-panel); display:flex;
+  align-items:center; gap:5px; text-align:left; padding:4px 8px; font-size:12px; }
+.explorer-entry:hover { background:var(--ui-hover); }
+.explorer-entry.active { background:var(--ui-control); font-weight:600;
+  border-left:2px solid var(--ui-accent); }
+.explorer-arrow { width:13px; flex-shrink:0; text-align:center; }
+.explorer-file-icon { width:15px; flex-shrink:0; text-align:center; }
+.explorer-name { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+#explorerToggle { margin-left:auto; margin-right:10px; padding:7px 11px; }
+@media(max-width:650px) {
+  #explorerPanel { width:min(75vw,280px); flex-basis:min(75vw,280px); }
+  #explorerToggle { margin-left:auto; }
+}
+
+/* v0.0.17.1: Explorer control belongs to the upper-left utility rail. */
+header { justify-content:initial; gap:10px; }
+.header-utility { display:flex; align-items:center; margin-left:8px; }
+header .menu-wrap { margin-left:auto; }
+#explorerToggle { margin:0; padding:7px 11px; min-width:92px;
+  background:var(--ui-control); color:var(--ui-text-on-control);
+  border:1px solid var(--ui-border); }
+#explorerToggle[aria-expanded="true"] { background:var(--ui-hover); }
+@media(max-width:650px) { .header-utility { margin-left:0; }
+  #explorerToggle { min-width:0; padding:7px; font-size:11px; } }
+
+/* Explorer v0.0.18: compact Cluster graphite controls, inline editing and menu. */
+#explorerPanel { position:relative; width:290px; flex-basis:290px; }
+.explorer-actions { display:grid; grid-template-columns:1fr 1fr 32px; gap:5px; }
+.explorer-actions button { min-width:0; font-size:11px; padding:7px 4px; border-radius:4px; }
+#explorerRefresh { font-size:17px; }
+.explorer-entry { cursor:default; user-select:none; touch-action:pan-y; }
+.explorer-entry.drag-ready { opacity:.55; }
+.explorer-entry.drag-target { outline:1px solid var(--ui-accent); outline-offset:-2px; }
+.explorer-rename { min-width:0; flex:1; background:var(--ui-control);
+ color:var(--ui-text-on-control); border:1px solid var(--ui-accent);
+ border-radius:2px; font:inherit; padding:2px 4px; }
+.explorer-context { position:absolute; z-index:50; min-width:160px;
+ display:flex; flex-direction:column; padding:5px; border-radius:6px;
+ border:1px solid var(--ui-border); background:var(--ui-panel);
+ box-shadow:0 12px 28px #0008; }
+.explorer-context button { border:0; text-align:left; background:transparent;
+ color:var(--ui-text-on-panel); padding:8px 10px; border-radius:3px; font:inherit; }
+.explorer-context button:hover { background:var(--ui-hover); }
+@media(max-width:650px) { #explorerPanel { width:min(85vw,310px); flex-basis:min(85vw,310px); } }
+
+/* Explorer v0.0.19 — rounded controls and exactly one selected workspace row. */
+#explorerPanel .explorer-actions button,
+#explorerPanel .explorer-header button,
+#explorerToggle { border-radius:10px; transition:background-color .15s ease,border-color .15s ease; }
+#explorerSearch { border-radius:10px; }
+#explorerTree { padding:4px 6px 12px; }
+#explorerTree .explorer-entry { border-radius:8px; min-height:32px; padding-top:5px; padding-bottom:5px; margin:1px 0; }
+#explorerTree .explorer-entry.active {
+ background:color-mix(in srgb,var(--ui-accent) 23%,var(--ui-panel));
+ color:var(--ui-text-on-panel); border-left:0;
+ box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ui-accent) 42%,transparent);
+}
+#explorerTree .explorer-entry.active:hover { background:color-mix(in srgb,var(--ui-accent) 30%,var(--ui-panel)); }
+.explorer-context { border-radius:12px; padding:6px; }
+.explorer-context button { border-radius:8px; }
+#explorerPanel .explorer-rename { border-radius:7px; }
+
+/* v0.0.22 — separate folder disclosure from left-click action menu. */
+#explorerTree .explorer-disclosure { cursor:pointer; display:inline-flex; align-items:center; justify-content:center; min-width:20px; min-height:24px; border-radius:6px; }
+#explorerTree .explorer-disclosure:hover { background:var(--ui-hover); }
+.explorer-context { z-index:100; }
+
+/* Explorer v0.0.24: New, Folder, Open and Refresh share the action rail. */
+#explorerPanel .explorer-actions { grid-template-columns:1fr 1.2fr 1.2fr 32px; gap:4px; }
+#explorerPanel .explorer-actions button { font-size:10px; padding:7px 2px; white-space:nowrap; }
+
+/* v0.0.26: inline Explorer file/folder naming. */
+#explorerPanel .explorer-actions { grid-template-columns:1fr 1fr 32px; }
+#explorerTree .explorer-create-row { display:flex; align-items:center; }
+#explorerTree .explorer-create-input { flex:1; min-width:0; width:auto; background:var(--ui-panel); color:var(--ui-text-on-panel); border:1px solid var(--ui-accent); outline:none; padding:4px 6px; }
+
+/* v0.0.30 — native Cluster palette, read-only syntax overlay. */
+#highlightOverlay {
+  position:absolute; z-index:1; inset:0 0 0 60px; margin:0;
+  padding:16px; overflow:hidden; pointer-events:none; white-space:pre;
+  tab-size:4; font:14px/22px Consolas,'Microsoft JhengHei',monospace;
+  color:var(--ui-text); background:transparent; border:0;
+}
+#editorPane textarea {z-index:2; caret-color:var(--ui-text);}
+#editorPane textarea.highlight-active {
+  color:transparent !important; -webkit-text-fill-color:transparent;
+}
+#editorPane textarea.highlight-active::selection {
+  background:rgba(116,149,255,.35); -webkit-text-fill-color:transparent;
+}
+.highlighter-dialog {
+  border:1px solid var(--ui-border);border-radius:12px;
+  background:var(--ui-panel);color:var(--ui-text-on-panel);
+  width:min(460px,calc(100vw - 24px));padding:0;
+  box-shadow:0 24px 70px #0009;
+}
+.highlighter-dialog::backdrop {background:rgba(0,0,0,.6);}
+.highlighter-dialog .palette-modal-header,
+.highlighter-dialog .palette-modal-footer {padding:18px 22px;}
+.highlighter-content {padding:18px 22px;display:grid;gap:12px;}
+.highlighter-content p {margin:0;color:var(--ui-muted);line-height:1.6;}
+.highlighter-switch {display:flex;align-items:center;gap:10px;font-size:14px;}
+#highlighterState {font-size:11px;}
+
+/* v0.0.31: palette-aware editor contrast, including white mode. */
+#highlightOverlay {color:var(--ui-text);}
+#editorPane textarea:not(.highlight-active) {color:var(--ui-text);}
+#editorPane textarea.highlight-active {caret-color:var(--ui-text);}
+.highlighter-dialog .highlighter-content,
+.highlighter-dialog .highlighter-switch {color:var(--ui-text-on-panel);}
+.highlighter-dialog .highlighter-content p {color:var(--ui-text-on-panel);opacity:.88;}
+.highlighter-dialog .palette-modal-header h2 {color:var(--ui-text-on-panel);}
+.highlighter-dialog button {background:var(--ui-control);color:var(--ui-text-on-control);border-color:var(--ui-border);}
+.highlighter-dialog button:hover {background:var(--ui-hover);color:var(--ui-text-on-panel);}
+
+/* v0.0.31: editor background and foreground follow the global palette. */
+#editorPane {background:var(--ui-editor);}
+#editorPane #gutter {background:var(--ui-gutter);color:var(--ui-text);border-color:var(--ui-border);}
+#editorPane #editor {background:transparent;color:var(--ui-text);}
+#highlightOverlay {color:var(--ui-text);background:transparent;}
+#encodingDialog select {background:var(--ui-control);color:var(--ui-text-on-control);
+  border:1px solid var(--ui-border);padding:9px;border-radius:7px;}
+#encodingDialog label {color:var(--ui-text-on-panel);}
+
+/* v0.0.41: tab guide is a fixed viewport; only its inner mirror translates. */
+#tabGuide { padding:0; overflow:hidden; }
+#tabGuide .tab-guide-content { box-sizing:border-box; padding:16px; width:max-content; min-width:100%; white-space:pre; font:inherit; tab-size:4; will-change:transform; }
+
+/* v0.0.42 — compact, grouped Explorer context actions. */
+.explorer-context {
+  box-sizing:border-box; width:224px; min-width:0; max-width:calc(100% - 16px);
+  max-height:calc(100% - 16px); overflow-y:auto; overscroll-behavior:contain;
+  padding:6px; gap:0; border-radius:12px;
+  border:1px solid var(--ui-border);
+  background:var(--ui-panel); color:var(--ui-text-on-panel);
+  box-shadow:0 18px 48px #0007,0 2px 8px #0003;
+}
+.explorer-context-header { display:flex; align-items:center; gap:9px; padding:10px 9px 11px; min-width:0; }
+.explorer-context-header-icon { width:30px; height:30px; flex-shrink:0; display:grid; place-items:center;
+  border-radius:9px; background:var(--ui-control); color:var(--ui-text-on-control); font-size:16px; }
+.explorer-context-details { min-width:0; flex:1; }
+.explorer-context-title { font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.explorer-context-subtitle { margin-top:2px; font-size:10px; color:var(--ui-muted); }
+.explorer-context-separator { height:1px; margin:5px 6px; background:var(--ui-border); }
+.explorer-context-item { display:flex; align-items:center; width:100%; gap:10px;
+  padding:9px 10px; min-height:35px; border:0; border-radius:7px;
+  background:transparent; color:var(--ui-text-on-panel); font:inherit; font-size:12px;
+  cursor:pointer; transition:background-color .12s ease; }
+.explorer-context-item:hover,
+.explorer-context-item:focus-visible {
+  background:var(--ui-hover); outline:none;
+}
+.explorer-context-icon { width:17px; flex:0 0 17px; text-align:center; font-size:14px; opacity:.85; }
+.explorer-context-label { flex:1; text-align:left; }
+.explorer-context-item.is-danger { color:#e87878; }
+.explorer-context-item.is-danger:hover,
+.explorer-context-item.is-danger:focus-visible {
+  background:color-mix(in srgb,#d84c4c 18%,var(--ui-panel));
+}
+
+/* v0.0.43 — context menu is portaled beside, never on top of, Explorer. */
+body > .explorer-context { position:fixed; z-index:2000; min-width:0; box-sizing:border-box;
+  overflow-x:hidden; overflow-y:auto; max-height:calc(100dvh - 16px); }
+body > .explorer-context .explorer-context-label { overflow-wrap:anywhere; }
+
+/* Explorer v0.0.45: inline context actions replace the filename, never float. */
+.explorer-inline-actions {
+  display:flex; align-items:center; flex:1; min-width:0;
+  gap:2px; overflow-x:auto; scrollbar-width:none;
+}
+.explorer-inline-actions::-webkit-scrollbar { display:none; }
+.explorer-inline-action {
+  flex:1 0 24px; min-width:24px; height:24px; padding:0 2px;
+  border:1px solid transparent; border-radius:4px;
+  background:transparent; color:var(--ui-text-on-panel);
+  font-size:14px; cursor:pointer;
+}
+.explorer-inline-action:hover,.explorer-inline-action:focus-visible {
+  background:var(--ui-hover); border-color:var(--ui-border);
+  outline-offset:1px;
+}
+.explorer-inline-action.is-danger:hover { color:#e66a6a; }
+.explorer-inline-action:disabled { opacity:.35; cursor:not-allowed; }
+.explorer-action-hint {
+  box-sizing:border-box; width:100%; min-width:0;
+  padding:8px 10px; overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap; font-size:12px; color:var(--ui-text-on-panel);
+  border:1px solid var(--ui-border); border-radius:4px;
+  background:var(--ui-control);
+}
+.explorer-action-hint[hidden],#explorerSearch[hidden] { display:none !important; }
+
+/* Highlighter overlay shares the textarea's exact font metrics and clipped viewport. */
+#highlightOverlay {box-sizing:border-box;overflow:hidden;}
+#highlightOverlay > div {width:max-content;min-width:100%;will-change:transform;}
+
+/* v0.0.50.4: viewport-only gutter labels, preserving native scroll geometry. */
+#gutter { position:relative; overflow:hidden; }
+#gutter .gutter-spacer { width:1px; pointer-events:none; }
+#gutter .gutter-labels { position:absolute; right:12px; top:16px; white-space:pre; text-align:right; line-height:inherit; pointer-events:none; }
+
+/* v0.0.52 — keybinding recorder: compact IDE-style settings card. */
+.highlighter-shortcut {
+  margin-top:16px; padding:16px; border:1px solid var(--ui-border);
+  border-radius:10px; background:var(--ui-panel); color:var(--ui-text-on-panel);
+}
+.highlighter-shortcut-heading {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  margin-bottom:14px;
+}
+.highlighter-shortcut-heading h3 { margin:0 0 5px; font-size:14px; font-weight:650; }
+.highlighter-shortcut-heading p, #highlighterShortcutHelp {
+  margin:0; font-size:12px; line-height:1.6; opacity:.85;
+}
+.highlighter-shortcut-tag {
+  flex:none; font-size:10px; letter-spacing:.08em; border:1px solid var(--ui-border);
+  border-radius:4px; padding:4px 6px;
+}
+.highlighter-shortcut-input-label { display:block; margin-bottom:7px; font-size:12px; }
+.highlighter-shortcut-field {
+  display:flex; align-items:center; gap:8px; border:1px solid var(--ui-border);
+  border-radius:7px; background:var(--ui-control); padding:5px 6px 5px 11px;
+}
+.highlighter-shortcut-field:focus-within {
+  outline:2px solid var(--ui-accent, #5a9aff); outline-offset:1px;
+}
+.highlighter-shortcut-icon { flex:none; font-size:16px; }
+#highlighterShortcutInput {
+  flex:1; min-width:0; padding:7px 0; border:0; outline:0;
+  background:transparent; color:var(--ui-text-on-panel); font:inherit; font-size:13px;
+  cursor:text;
+}
+#highlighterShortcutInput::placeholder { color:var(--ui-text-on-panel); opacity:.7; }
+#highlighterShortcutReset {
+  flex:none; padding:6px 10px; border:1px solid var(--ui-border);
+  border-radius:5px; background:var(--ui-panel); color:var(--ui-text-on-panel);
+  cursor:pointer;
+}
+#highlighterShortcutHelp { margin-top:8px; }
+#highlighterShortcutStatus { min-height:18px; margin:8px 0 0; font-size:12px; }
+#highlighterShortcutStatus[data-state="error"] { color:#ed7979; }
+#highlighterShortcutStatus[data-state="ready"] { color:var(--ui-text-on-panel); }
+.highlighter-shortcut-actions { display:flex; justify-content:flex-end; margin-top:10px; }
+#highlighterShortcutSave {
+  padding:8px 14px; border:1px solid var(--ui-border); border-radius:6px;
+  background:var(--ui-control); color:var(--ui-text-on-panel); cursor:pointer;
+}
+#highlighterShortcutSave:disabled { opacity:.45; cursor:default; }
+@media(max-width:480px) {
+  .highlighter-shortcut { padding:12px; }
+  .highlighter-shortcut-heading { flex-wrap:wrap; }
+}
+
+/* v0.0.56 — VS Code-inspired actions live inside the filename row. */
+#explorerTree .explorer-entry {
+  box-sizing:border-box; min-width:0; overflow:hidden;
+}
+#explorerTree .explorer-entry .explorer-name {
+  min-width:0; flex:1 1 auto; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap;
+}
+#explorerTree .explorer-entry.has-inline-actions {
+  min-height:28px; height:28px; padding-inline-end:3px;
+}
+#explorerTree .explorer-inline-actions {
+  flex:0 0 auto; display:inline-flex; flex-direction:row;
+  align-items:center; justify-content:flex-end; gap:1px;
+  margin-inline-start:3px; padding:0; width:auto; max-width:100%;
+  background:var(--ui-panel); border-radius:3px;
+}
+#explorerTree .explorer-inline-action {
+  box-sizing:border-box; display:inline-flex; flex:0 0 20px;
+  width:20px; min-width:20px; height:21px; min-height:21px;
+  padding:0; margin:0; border:0; border-radius:3px;
+  align-items:center; justify-content:center;
+  background:transparent; color:var(--ui-text-on-panel); cursor:pointer;
+}
+#explorerTree .explorer-action-symbol {
+  font-size:13px; line-height:19px;
+}
+#explorerTree .explorer-inline-action:hover:not(:disabled),
+#explorerTree .explorer-inline-action:focus-visible {
+  background:var(--ui-hover); outline:1px solid var(--ui-border);
+}
+#explorerTree .explorer-inline-action:disabled {opacity:.35;cursor:default}
+#explorerTree .explorer-inline-action.is-danger:hover {background:#813b44;color:#fff}
+#explorerTree .explorer-entry.active {
+  background:var(--explorer-active-bg,#274c70);
+  color:var(--explorer-active-text,#fff);
+  box-shadow:inset 3px 0 0 var(--explorer-active-edge,#80c8ff);
+  font-weight:700;
+}
+#explorerTree .explorer-entry.active:hover {
+  background:var(--explorer-active-hover,#32628d);
+}
+@media(max-width:380px) {
+  #explorerTree .explorer-inline-action {flex-basis:18px;width:18px;min-width:18px}
+}
+
+/* v0.0.57 File Tool — compact workbench list, theme-only color tokens. */
+#toolOptions { min-width:224px; max-width:min(300px,calc(100vw - 24px));
+  padding:6px; border:1px solid var(--ui-border); border-radius:8px;
+  background:var(--ui-surface); color:var(--ui-text-on-surface); box-shadow:0 12px 28px #0004; }
+#toolOptions[hidden] { display:none!important; }
+#toolOptions .file-tool-heading { display:flex; justify-content:space-between;
+  padding:8px 10px 6px; font-size:10px; font-weight:700; letter-spacing:.11em;
+  color:var(--ui-text-on-surface); opacity:.7; }
+#toolOptions .file-tool-heading span {font-weight:400;letter-spacing:.04em}
+#toolOptions > button, #toolOptions #languageOptions button {
+  box-sizing:border-box; display:flex; align-items:center; width:100%;
+  min-height:32px; margin:0; padding:6px 10px; border:0; border-radius:5px;
+  background:transparent; color:var(--ui-text-on-surface);
+  font-size:12px; text-align:left; cursor:pointer; }
+#toolOptions > button:hover, #toolOptions > button:focus-visible,
+#toolOptions #languageOptions button:hover {background:var(--ui-hover);outline:0}
+#toolOptions .file-tool-chevron {margin-left:auto}
+#toolOptions .menu-divider {height:1px;margin:5px 6px;background:var(--ui-border)}
+#toolOptions .priority-heading {display:block;margin:8px 10px 5px;color:var(--ui-text-on-surface);font-size:11px}
+#toolOptions #priority {box-sizing:border-box;width:calc(100% - 16px);margin:0 8px 5px;
+  padding:6px;border:1px solid var(--ui-border);border-radius:5px;
+  background:var(--ui-control);color:var(--ui-text-on-control)}
+.file-tool-dialog {width:min(520px,calc(100vw - 24px));max-height:min(80vh,680px);
+  padding:0; border:1px solid var(--ui-border);border-radius:10px;
+  background:var(--ui-surface);color:var(--ui-text-on-surface);box-shadow:0 24px 60px #0008}
+.file-tool-dialog::backdrop {background:#0009}
+.file-tool-dialog-head,.file-tool-dialog-footer {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--ui-border)}
+.file-tool-dialog-head h2 {margin:4px 0;font-size:18px}
+.file-tool-dialog-head p {margin:4px 0 0;font-size:12px;opacity:.75;line-height:1.6}
+.file-tool-eyebrow {font-size:10px;letter-spacing:.13em;opacity:.7}
+.file-tool-dialog button {border:1px solid var(--ui-border);border-radius:5px;padding:6px 10px;background:var(--ui-control);color:var(--ui-text-on-control);cursor:pointer}
+.file-tool-dialog button:hover {background:var(--ui-hover)}
+.file-tool-dialog-body {padding:16px 20px;overflow-y:auto;max-height:55vh}
+.file-tool-add-form label {display:block;font-size:12px;margin-bottom:7px}
+.file-tool-input-row {display:flex;gap:8px}
+.file-tool-input-row input {flex:1;min-width:0;padding:8px 10px;border:1px solid var(--ui-border);border-radius:5px;background:var(--ui-control);color:var(--ui-text-on-control)}
+.file-tool-list-head {display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px;font-size:12px}
+.file-tool-list-head strong {font-variant-numeric:tabular-nums;margin-left:5px}
+.file-tool-list {border:1px solid var(--ui-border);border-radius:6px;overflow:auto;max-height:240px}
+.file-tool-type-row {display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;padding:3px 9px;border-bottom:1px solid var(--ui-border)}
+.file-tool-type-row:last-child {border-bottom:0}
+.file-tool-type-row:hover {background:var(--ui-hover)}
+.file-tool-type-row code {font-size:12px;color:var(--ui-text-on-surface)}
+.file-tool-type-actions {display:flex;gap:5px}
+.file-tool-type-actions button {padding:3px 7px;min-width:26px}
+.file-tool-error {min-height:1.2em;font-size:12px;color:var(--ui-text-on-surface)}
+.file-tool-dialog-footer {border-top:1px solid var(--ui-border);border-bottom:0;font-size:11px}
+.file-tool-dialog-footer span {opacity:.75}
+
+/* v0.0.60 PR-02: isolated PowerShell setup view, palette-aware */
+#clusterEditorColumn{position:relative}
+#clusterEditorColumn.psm-mode #workspace{visibility:hidden;pointer-events:none}
+.psm-pane[hidden]{display:none!important}
+.psm-pane{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;background:var(--ui-surface,#17191e);color:var(--ui-text-on-surface,#e9edf5);border:1px solid var(--ui-border,#404550);font-family:inherit}
+.psm-top{display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:8px 15px;border-bottom:1px solid var(--ui-border,#444)}
+.psm-actions{display:flex;align-items:center;gap:9px;font-size:12px}
+.psm-actions button{padding:5px 10px}
+.psm-menu{position:absolute;right:42px;top:43px;z-index:10;display:grid;gap:4px;padding:8px;background:var(--ui-surface,#252831);border:1px solid var(--ui-border,#444);border-radius:7px;box-shadow:0 10px 30px #0007}
+.psm-menu[hidden]{display:none}
+.psm-body{width:min(540px,calc(100% - 36px));margin:auto;display:flex;flex-direction:column;align-items:stretch;gap:13px;padding:24px 0}
+.psm-body h2{margin:0;font-size:20px}
+.psm-body p{margin:0;font-size:13px;line-height:1.6}
+.psm-body label{font-size:12px;font-weight:600}
+.psm-body input{width:100%;padding:12px;border-radius:6px;background:var(--ui-control,#242733);color:var(--ui-text-on-control,#eee);border:1px solid var(--ui-border,#555);font-family:monospace}
+.psm-glyph{font-size:35px;opacity:.75}
+#explorerPowerShell{min-width:32px}
+
+/* v0.0.60: PowerShell is a header utility, independent of Explorer panel. */
+.header-utility{display:flex;align-items:center;gap:7px;min-width:0}
+.header-utility #explorerPowerShell{flex:0 0 auto;min-width:34px;padding:9px 10px}
+
+/* Keep shared document and PowerShell tab bar visible above the setup pane. */
+#clusterEditorColumn.psm-mode #tabs{position:relative;z-index:9;visibility:visible;pointer-events:auto}
+#clusterEditorColumn.psm-mode .psm-pane{top:48px}
+#clusterEditorColumn.psm-mode #tabs .tab:not(.psm-tab).active{background:#191a20;color:#a5a8b5}
+
+/* v0.0.60 PLA guided setup — follows the global palette. */
+.psm-quick-setup{display:grid;gap:14px;width:min(100%,640px);margin:0 auto 22px;text-align:left}
+.psm-setup-step{display:grid;grid-template-columns:38px minmax(0,1fr);gap:14px;padding:16px;border:1px solid color-mix(in srgb,var(--ui-accent,#8baaff) 30%,transparent);border-radius:12px;background:color-mix(in srgb,var(--ui-accent,#8baaff) 5%,transparent)}
+.psm-setup-step>span{font-size:18px;font-weight:750;color:var(--ui-accent,#8baaff)}
+.psm-setup-step strong{display:block;font-size:15px}
+.psm-setup-step p{font-size:12px;line-height:1.6;opacity:.85;margin:7px 0 12px}
+.psm-pair-row{display:flex;gap:8px;flex-wrap:wrap}
+.psm-pair-row input{flex:1 1 180px;min-width:0;padding:10px;border-radius:8px;border:1px solid currentColor;background:transparent;color:inherit}
+.psm-primary{border-radius:8px;padding:10px 16px;background:var(--ui-accent,#8baaff);color:#101018;font-weight:700}
+.psm-pane{overflow:auto}
+
+/* v0.0.60 setup revision 2 — semantic tokens, responsive wizard, theme-safe controls. */
+.psm-pane{
+ --psm-bg:var(--ui-background);
+ --psm-card:var(--ui-surface);
+ --psm-ink:var(--ui-text-on-surface,var(--ui-text));
+ --psm-muted:var(--ui-muted);
+ --psm-line:var(--ui-border);
+ --psm-button:var(--ui-control);
+ --psm-button-text:var(--ui-text-on-control,var(--ui-text));
+ --psm-hover:var(--ui-hover);
+ background:var(--psm-bg);color:var(--psm-ink);
+ border-color:var(--psm-line);overflow:auto;
+}
+.psm-pane .psm-top{position:sticky;top:0;z-index:2;background:var(--psm-card);color:var(--psm-ink);border-color:var(--psm-line)}
+.psm-pane .psm-top button,.psm-pane .psm-menu button,.psm-pane .psm-body button{
+ background:var(--psm-button);color:var(--psm-button-text);border:1px solid var(--psm-line);border-radius:8px;cursor:pointer;
+}
+.psm-pane button:hover{background:var(--psm-hover)}
+.psm-pane button:focus-visible,.psm-pane input:focus-visible,.psm-pane summary:focus-visible{outline:2px solid var(--psm-ink);outline-offset:3px}
+.psm-pane .psm-body{width:min(780px,calc(100% - 32px));max-width:100%;margin:0 auto;gap:18px;padding:24px 0 40px;align-items:stretch}
+.psm-intro{display:flex;align-items:center;gap:18px;padding:20px;border:1px solid var(--psm-line);border-radius:12px;background:var(--psm-card)}
+.psm-intro .psm-glyph{font-size:36px;line-height:1;opacity:1}
+.psm-eyebrow{display:block;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--psm-muted);margin-bottom:6px}
+.psm-intro h2{font-size:21px;line-height:1.3;margin:0 0 5px;color:var(--psm-ink)}
+.psm-intro p{color:var(--psm-muted);line-height:1.5}
+.psm-pane .psm-quick-setup{width:100%;gap:12px;margin:0}
+.psm-pane .psm-setup-step{grid-template-columns:42px minmax(0,1fr);gap:12px;background:var(--psm-card);border:1px solid var(--psm-line);border-radius:12px;padding:18px}
+.psm-pane .psm-step-number{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--psm-line);border-radius:9px;background:var(--psm-button);color:var(--psm-button-text);font-size:13px;font-weight:750}
+.psm-pane .psm-setup-step strong{font-size:15px;color:var(--psm-ink)}
+.psm-pane .psm-setup-step p{color:var(--psm-muted);opacity:1;font-size:13px;margin:6px 0 12px}
+.psm-pane .psm-primary{padding:10px 16px;font-weight:700;min-height:38px;background:var(--psm-button);color:var(--psm-button-text)}
+.psm-pane .psm-pair-row{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.psm-pane .psm-pair-row input{flex:1 1 220px;min-width:0;width:auto;max-width:100%;border:1px solid var(--psm-line);background:var(--ui-control);color:var(--psm-button-text);font:13px/1.5 Consolas,monospace}
+.psm-pane .psm-advanced{border:1px solid var(--psm-line);border-radius:9px;background:var(--psm-card);padding:12px 15px}
+.psm-pane .psm-advanced summary{cursor:pointer;color:var(--psm-ink);font-size:13px;font-weight:600}
+.psm-pane .psm-advanced label{display:block;color:var(--psm-muted);margin:12px 0 7px;font-weight:400}
+.psm-pane .psm-advanced input{width:100%;background:var(--ui-control);color:var(--psm-button-text);border-color:var(--psm-line);font-size:12px}
+.psm-pane .psm-footer{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.psm-pane .psm-footer [role="status"]{flex:1;min-width:160px;color:var(--psm-ink);font-size:13px}
+.psm-pane .psm-menu{background:var(--psm-card);border-color:var(--psm-line)}
+#clusterEditorColumn.psm-mode #tabs .tab:not(.psm-tab).active{background:var(--ui-panel);color:var(--ui-muted)}
+@media(max-width:600px){
+ .psm-pane .psm-body{width:calc(100% - 20px);padding:12px 0 28px}
+ .psm-intro{padding:14px;gap:10px}
+ .psm-intro h2{font-size:18px}
+ .psm-pane .psm-setup-step{padding:12px;grid-template-columns:32px minmax(0,1fr);gap:8px}
+ .psm-pane .psm-step-number{width:28px;height:28px}
+ .psm-pane .psm-pair-row input,.psm-pane .psm-pair-row button{flex:1 1 100%}
+ .psm-pane .psm-footer button{width:100%}
+}
+
+/* v0.0.60: visible PowerShell controls and menus in all palette variants. */
+.psm-pane .psm-top .psm-actions{display:flex;align-items:center;gap:8px}
+.psm-pane .psm-top .psm-actions [data-psm="status"]{color:var(--ui-text-on-surface,var(--ui-text));font-size:12px;font-weight:650;white-space:nowrap}
+.psm-pane .psm-top .psm-actions button{display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:36px;padding:6px;font-size:20px;line-height:1;color:var(--ui-text-on-control,var(--ui-text));background:var(--ui-control);border:1px solid var(--ui-border)}
+.psm-pane .psm-menu:not([hidden]){display:grid;grid-auto-rows:minmax(38px,auto);min-width:190px;gap:6px;padding:9px;background:var(--ui-surface);border:1px solid var(--ui-border);box-shadow:0 10px 26px #0005}
+.psm-pane .psm-menu button{display:block;min-height:36px;width:100%;text-align:left;padding:8px 12px;color:var(--ui-text-on-control,var(--ui-text));background:var(--ui-control);border:1px solid var(--ui-border);font-size:13px;line-height:1.35;white-space:normal}
+.psm-pane .psm-menu button:hover,.psm-pane .psm-top button:hover{background:var(--ui-hover);color:var(--ui-text-on-control,var(--ui-text))}
+.psm-pane .psm-body .psm-primary,.psm-pane .psm-body .psm-pair-row button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 16px;font-size:13px;font-weight:700;line-height:1.4;color:var(--ui-text-on-control,var(--ui-text));background:var(--ui-control);border:1px solid var(--ui-border);opacity:1;visibility:visible}
+.psm-pane .psm-footer [data-psm="feedback"]{min-height:20px}
+.psm-pane .psm-menu[hidden]{display:none!important}
+
+/* v0.0.60 UI hotfix: always resolve palette tokens, never allow invisible controls. */
+.psm-pane{
+ --psm-bg:var(--ui-background,var(--ui-surface,#17191e));
+ --psm-card:var(--ui-surface,#242630);
+ --psm-ink:var(--ui-text-on-surface,var(--ui-text,#f1f2f5));
+ --psm-muted:var(--ui-muted,var(--ui-text-on-surface,#c6cad3));
+ --psm-line:var(--ui-border,#5a6070);
+ --psm-button:var(--ui-control,#353946);
+ --psm-button-text:var(--ui-text-on-control,var(--ui-text-on-surface,#f1f2f5));
+ --psm-hover:var(--ui-hover,var(--ui-control,#4a5060));
+}
+.psm-pane .psm-top,.psm-pane .psm-setup-step,.psm-pane .psm-advanced,.psm-pane .psm-intro{color:var(--psm-ink)}
+.psm-pane .psm-menu{position:fixed!important;right:auto!important;bottom:auto!important;z-index:2147483000!important;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto}
+.psm-pane .psm-menu button,.psm-pane .psm-top button,.psm-pane .psm-body button{color:var(--psm-button-text)!important;background:var(--psm-button)!important;border-color:var(--psm-line)!important;opacity:1!important;visibility:visible!important;-webkit-text-fill-color:currentColor}
+.psm-pane .psm-menu button:hover,.psm-pane .psm-top button:hover,.psm-pane .psm-body button:hover{background:var(--psm-hover)!important}
+.psm-pane .psm-top [data-psm="status"],.psm-pane .psm-body strong,.psm-pane .psm-advanced summary{color:var(--psm-ink)!important;-webkit-text-fill-color:currentColor}
+.psm-pane .psm-setup-step p,.psm-pane .psm-intro p{color:var(--psm-muted)!important;-webkit-text-fill-color:currentColor}
+.psm-pane .psm-menu[hidden]{display:none!important}
+
+/* v0.0.60 r4: restore full setup content; prior margin:auto vertically centered
+   an overflowing flex column and clipped the first two steps. */
+.psm-pane{min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable}
+.psm-pane .psm-top{flex:0 0 auto}
+.psm-pane .psm-body{flex:0 0 auto;margin:0 auto!important;padding:20px 0 32px!important;align-self:center;min-height:min-content}
+.psm-pane .psm-quick-setup{display:grid!important;grid-template-columns:minmax(0,1fr);margin:0!important;min-height:max-content}
+.psm-pane .psm-setup-step{display:grid!important;min-height:100px;overflow:visible}
+.psm-pane .psm-setup-step>div{min-width:0}
+.psm-pane .psm-setup-step [data-psm-extra]{visibility:visible!important;opacity:1!important}
+.psm-pane .psm-setup-step button,.psm-pane .psm-menu button,.psm-pane .psm-footer button{
+ color:var(--ui-text-on-surface,#f1f2f5)!important;
+ -webkit-text-fill-color:var(--ui-text-on-surface,#f1f2f5)!important;
+ background:var(--ui-surface,#242630)!important;
+ border:1px solid var(--ui-border,#5a6070)!important;
+ font-weight:700!important;
+ text-shadow:none!important;
+}
+.psm-pane .psm-setup-step button:hover,.psm-pane .psm-menu button:hover,.psm-pane .psm-footer button:hover{filter:brightness(1.15)}
+.psm-pane .psm-menu:not([hidden]){display:grid!important;grid-template-columns:minmax(170px,1fr)}
+.psm-pane .psm-menu button{min-width:170px;min-height:40px;white-space:normal}
+
+/* v0.0.60 r5: visible controls, full setup scroll and verified terminal. */
+.psm-pane .psm-body[hidden],.psm-pane .psm-terminal[hidden]{display:none!important}
+.psm-pane .psm-body{margin:0 auto!important;flex:0 0 auto;overflow:visible;transform:none!important}
+.psm-pane .psm-quick-setup{min-height:0;align-self:stretch}
+.psm-pane .psm-setup-step button,.psm-pane .psm-footer button,.psm-pane .psm-menu button,.psm-pane .psm-terminal button{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ min-width:105px;min-height:40px;padding:10px 15px!important;
+ font:600 13px/1.35 Inter,'Segoe UI','Microsoft JhengHei',sans-serif!important;
+ color:var(--ui-text-on-surface,#f1f2f5)!important;
+ -webkit-text-fill-color:var(--ui-text-on-surface,#f1f2f5)!important;
+ background:var(--ui-surface,#292c35)!important;
+ border:1px solid var(--ui-border,#5a6070)!important;
+ text-align:center;white-space:normal;opacity:1!important;
+}
+.psm-pane .psm-menu button{justify-content:flex-start!important}
+.psm-pane .psm-setup-step button:focus-visible,.psm-pane .psm-terminal button:focus-visible{outline:2px solid var(--ui-accent,#9fb4ff);outline-offset:2px}
+.psm-pane .psm-terminal{flex:1;min-height:0;display:flex;flex-direction:column;gap:0;padding:16px 22px;background:var(--ui-editor,#101114);color:var(--ui-text-on-surface,#f1f2f5)}
+.psm-terminal-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:0 0 14px;border-bottom:1px solid var(--ui-border,#5a6070)}
+.psm-terminal-head strong{font-size:15px}
+.psm-terminal-head span{margin-right:auto;font-size:12px;color:var(--ui-muted,#c7cad4)}
+.psm-terminal-output{flex:1;min-height:180px;overflow:auto;padding:14px 2px;font:13px/1.65 Consolas,'Cascadia Mono',monospace}
+.psm-terminal-output pre{margin:0 0 12px;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;color:inherit}
+.psm-terminal-actions{display:flex;gap:9px;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--ui-border,#5a6070)}
+@media(max-width:600px){.psm-pane .psm-terminal{padding:12px}.psm-terminal-actions button{flex:1 1 140px}}
+
+/* v0.0.60 r7 — single owner for PSM setup layout; no overlapping grid rows. */
+.psm-pane.psm-compact-setup{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
+.psm-pane.psm-compact-setup .psm-top{flex:0 0 auto;min-height:50px;padding:8px 16px;gap:10px}
+.psm-pane.psm-compact-setup .psm-top .psm-actions button{font-size:12px!important;min-width:52px;min-height:34px;padding:6px 10px;white-space:nowrap}
+.psm-pane.psm-compact-setup .psm-body:not([hidden]){
+ display:flex!important;flex-direction:column!important;align-items:stretch;
+ gap:12px!important;flex:1 1 auto;min-height:0;min-width:0;
+ width:min(960px,calc(100% - 32px))!important;max-width:960px!important;
+ margin:0 auto!important;padding:14px 0 24px!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+}
+.psm-pane.psm-compact-setup .psm-body>*{flex:0 0 auto;min-width:0;box-sizing:border-box}
+.psm-pane.psm-compact-setup .psm-intro{min-height:0;padding:13px 16px;gap:10px}
+.psm-pane.psm-compact-setup .psm-intro h2{font-size:17px;margin:2px 0 4px}
+.psm-pane.psm-compact-setup .psm-intro p{font-size:12px;line-height:1.45;margin:0}
+.psm-pane.psm-compact-setup .psm-quick-setup{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+ grid-auto-rows:max-content!important;align-items:stretch!important;
+ gap:12px!important;min-height:0!important;margin:0!important;
+}
+.psm-pane.psm-compact-setup .psm-setup-step{
+ display:grid!important;grid-template-columns:30px minmax(0,1fr);
+ align-content:start!important;align-items:start;gap:10px!important;
+ min-height:0!important;height:auto!important;overflow:visible!important;
+ padding:14px!important;box-sizing:border-box;
+}
+.psm-pane.psm-compact-setup .psm-setup-step>div{min-width:0}
+.psm-pane.psm-compact-setup .psm-setup-step:nth-child(3){grid-column:1/-1}
+.psm-pane.psm-compact-setup .psm-setup-step strong{display:block;font-size:13px;line-height:1.4}
+.psm-pane.psm-compact-setup .psm-setup-step p{font-size:12px;line-height:1.5;margin:4px 0 10px;overflow-wrap:anywhere}
+.psm-pane.psm-compact-setup .psm-step-number{width:28px;height:28px}
+.psm-pane.psm-compact-setup .psm-pair-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.psm-pane.psm-compact-setup .psm-pair-row input{flex:1 1 210px;min-width:0;width:auto;max-width:100%}
+.psm-pane.psm-compact-setup .psm-footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:0 2px;min-height:44px}
+.psm-pane.psm-compact-setup .psm-footer p{flex:1 1 200px;min-width:0;font-size:12px;line-height:1.5;margin:0;overflow-wrap:anywhere}
+.psm-pane.psm-compact-setup .psm-advanced{min-height:0;padding:10px 12px}
+.psm-pane.psm-compact-setup .psm-advanced summary{font-size:12px}
+.psm-pane.psm-compact-setup .psm-menu button{color:var(--psm-ink,#f1f2f5)!important;-webkit-text-fill-color:currentColor!important;min-height:40px}
+.psm-pane.psm-compact-setup .psm-setup-step button,.psm-pane.psm-compact-setup .psm-footer button{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ min-width:110px;min-height:38px!important;padding:8px 14px!important;
+ font-size:12px!important;font-weight:700!important;
+ color:var(--psm-ink,#f1f2f5)!important;-webkit-text-fill-color:currentColor!important;
+ background:var(--psm-card,#242630)!important;border:1px solid var(--psm-line,#5a6070)!important;
+}
+.psm-pane.psm-compact-setup .psm-body[hidden],.psm-pane.psm-compact-setup .psm-terminal[hidden]{display:none!important}
+@media(max-width:760px){
+ .psm-pane.psm-compact-setup .psm-quick-setup{grid-template-columns:minmax(0,1fr)}
+ .psm-pane.psm-compact-setup .psm-setup-step:nth-child(3){grid-column:1}
+ .psm-pane.psm-compact-setup .psm-body:not([hidden]){width:calc(100% - 20px)!important}
+}
+
+/* v0.0.60 r8 interactive PowerShell console */
+.psm-pane .psm-terminal-input{display:flex;align-items:center;gap:10px;min-width:0;padding:12px 0;border-top:1px solid var(--psm-line,#555);margin:0}
+.psm-pane .psm-terminal-input label{flex:0 0 auto;font:700 14px Consolas,'Cascadia Mono',monospace;color:var(--psm-ink,#fff)}
+.psm-pane .psm-terminal-input input{flex:1 1 auto;min-width:0;min-height:38px;padding:8px 12px;background:var(--psm-bg,#17191e);color:var(--psm-ink,#fff);border:1px solid var(--psm-line,#555);border-radius:6px;font:13px Consolas,'Cascadia Mono',monospace}
+.psm-pane .psm-terminal-input input:focus{outline:2px solid var(--ui-accent,#9fb4ff);outline-offset:1px}
+.psm-pane .psm-terminal-input button{flex:0 0 auto;min-width:80px;min-height:38px;padding:8px 12px;color:var(--psm-ink,#fff);background:var(--psm-card,#292c35);border:1px solid var(--psm-line,#555);border-radius:6px}
+.psm-pane .psm-terminal-output{min-height:100px;overflow:auto;flex:1 1 auto}
+@media(max-width:600px){.psm-pane .psm-terminal-input{flex-wrap:wrap}.psm-pane .psm-terminal-input input{flex:1 1 calc(100% - 55px)}}
+
+/* v0.0.60 r9 — classic full-window PowerShell; setup wizard is unchanged. */
+.psm-pane.psm-connected{background:#000!important;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.psm-pane.psm-connected>.psm-top{display:none!important}
+.psm-pane.psm-connected .psm-terminal-classic:not([hidden]){display:flex!important;flex:1 1 auto;min-height:0;min-width:0;padding:0!important;gap:0!important;background:#000!important;color:#f5f7fb!important;overflow:hidden}
+.psm-pane.psm-connected .psm-terminal-head{display:flex!important;flex:0 0 auto;align-items:center;gap:8px;padding:7px 10px!important;min-height:45px;border-bottom:1px solid #303238!important;background:#101113!important;color:#f5f7fb!important}
+.psm-pane.psm-connected .psm-terminal-head strong{font:700 12px/1.3 'Segoe UI',sans-serif!important}
+.psm-pane.psm-connected .psm-terminal-connection{margin-right:auto!important;font:12px/1.3 'Segoe UI',sans-serif!important;color:#91bfff!important}
+.psm-pane.psm-connected .psm-terminal-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.psm-pane.psm-connected .psm-terminal-toolbar button{min-height:30px!important;min-width:0!important;padding:5px 10px!important;border-radius:5px!important;border:1px solid #45484f!important;background:#161719!important;color:#f5f7fb!important;-webkit-text-fill-color:#f5f7fb!important;font:600 12px/1.25 'Segoe UI','Microsoft JhengHei',sans-serif!important;white-space:nowrap}
+.psm-pane.psm-connected .psm-terminal-toolbar button:hover{background:#292c32!important}
+.psm-pane.psm-connected .psm-terminal-output{order:1;flex:0 1 auto!important;min-height:0!important;max-height:calc(100% - 95px);overflow:auto!important;padding:8px 8px 0!important;background:#000!important;color:#f5f7fb!important;scrollbar-color:#4c5566 #000}
+.psm-pane.psm-connected .psm-terminal-output pre{font:13px/1.55 Consolas,'Cascadia Mono',monospace!important;color:#f5f7fb!important;margin:0!important;white-space:pre-wrap}
+.psm-pane.psm-connected .psm-terminal-input{order:2;flex:0 0 auto;display:flex!important;align-items:baseline;gap:7px!important;margin:0!important;padding:0 8px 8px!important;border:0!important;background:#000!important;min-height:28px}
+.psm-pane.psm-connected .psm-terminal-input label{font:13px/1.5 Consolas,'Cascadia Mono',monospace!important;color:#f5f7fb!important;white-space:nowrap}
+.psm-pane.psm-connected .psm-terminal-input input{flex:1 1 auto;min-width:0;height:24px;min-height:24px!important;padding:0!important;border:0!important;outline:none!important;border-radius:0!important;background:transparent!important;color:#fff!important;-webkit-text-fill-color:#fff!important;box-shadow:none!important;font:13px/1.5 Consolas,'Cascadia Mono',monospace!important}
+.psm-pane.psm-connected .psm-terminal-input input::placeholder{color:transparent!important}
+.psm-pane.psm-connected .psm-terminal-input button,.psm-pane.psm-connected .psm-terminal-actions{display:none!important}
+.psm-pane.psm-connected .psm-terminal-input:focus-within{outline:none}
+.psm-pane.psm-connected .psm-terminal-classic{justify-content:flex-start}
+.psm-pane.psm-connected .psm-terminal-output:empty{min-height:0!important}
+.psm-pane.psm-connected .psm-menu{z-index:9999}
+@media(max-width:650px){.psm-pane.psm-connected .psm-terminal-head{flex-wrap:wrap}.psm-pane.psm-connected .psm-terminal-toolbar{width:100%;justify-content:flex-end}.psm-pane.psm-connected .psm-terminal-output{max-height:calc(100% - 145px)}}
+
+/* v0.0.61 persistent terminal: multiline input, normal copy/paste and accessible focus. */
+.psm-pane.psm-connected .psm-terminal-input textarea{
+ flex:1 1 auto;min-width:0;min-height:26px;max-height:160px;
+ resize:vertical;padding:2px 0!important;margin:0;
+ border:0!important;outline:0!important;border-radius:0!important;
+ background:#000!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+ font:13px/1.5 Consolas,'Cascadia Mono',monospace!important;
+}
+.psm-pane.psm-connected .psm-terminal-input textarea::placeholder{color:transparent!important}
+.psm-pane.psm-connected .psm-terminal-input textarea:focus{outline:0!important;box-shadow:none!important}
+
+
+/* v0.0.69 — PowerShell toolbar follows the shared UI_PALETTE contract.
+   Overrides legacy fixed black controls in connected mode. */
+.psm-pane.psm-connected .psm-terminal-head,
+.psm-pane.psm-connected .psm-terminal-toolbar,
+.psm-pane.psm-connected .psm-terminal-classic {
+  background:var(--ui-panel,#111216)!important;
+  color:var(--ui-text-on-panel,#f1f2f5)!important;
+  border-color:var(--ui-border,#3c3e49)!important;
+}
+.psm-pane.psm-connected .psm-terminal-head strong {
+  color:var(--ui-text-on-panel,#f1f2f5)!important;
+  -webkit-text-fill-color:var(--ui-text-on-panel,#f1f2f5)!important;
+}
+.psm-pane.psm-connected .psm-terminal-head span {
+  color:var(--ui-text-on-panel,#f1f2f5)!important;
+  -webkit-text-fill-color:var(--ui-text-on-panel,#f1f2f5)!important;
+}
+.psm-pane.psm-connected .psm-terminal-toolbar button {
+  background:var(--ui-control,#343640)!important;
+  color:var(--ui-text-on-control,#f1f2f5)!important;
+  -webkit-text-fill-color:var(--ui-text-on-control,#f1f2f5)!important;
+  border-color:var(--ui-border,#3c3e49)!important;
+}
+.psm-pane.psm-connected .psm-terminal-toolbar button:hover {
+  background:var(--ui-hover,#474a58)!important;
+  color:var(--ui-text-on-control,#f1f2f5)!important;
+  -webkit-text-fill-color:var(--ui-text-on-control,#f1f2f5)!important;
+}
+.psm-pane.psm-connected .psm-terminal-toolbar button:focus-visible {
+  outline:2px solid var(--ui-accent,#7aafff)!important;
+  outline-offset:2px;
+}
+.psm-pane.psm-connected .psm-terminal-connection {
+  color:var(--ui-text-on-panel,#f1f2f5)!important;
+}
