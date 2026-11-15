@@ -61,3 +61,10 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - Event chain: Menu -> FileOperationsUI -> Hub -> OMU/EDPMU; Open -> ChunkLoaderUI -> ChunkLoading -> FileOperationsUI.
 - Error cases: SAVE_NO_FILE 400; SAVE_PARTIAL_BLOCKED 409; CLOSE_CANCELLED 409; loader failure 500.
 - Relation test: request PASS/FAIL and log records; browser verification pending.
+
+## P10 — Objects / event chain / EHU
+- New object EditorViewportUI; new property VisibleLineRange.
+- Diagram: UI wheel -> EditorViewportUI -> ChunkLoaderUI -> chunkLoading.readWindow -> FileOperationsUI.receive -> EditorUI; save -> FileOperationsUI.assemble -> Blob download.
+- LinkCore: Hub records WINDOW_START, WINDOW_READY, OPEN_WINDOW and SAVE_DOWNLOAD_REQUESTED; EDPMU stores FileState and VisibleLineRange.
+- EHU: WINDOW_FAILED (409/500), SAVE_ASSEMBLY_FAILED (500), SAVE_NO_FILE (400).
+- Relation tests: sequential next/previous, patch preservation, full Blob export, line count and status percentage. Pending browser verification.
