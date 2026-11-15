@@ -3,7 +3,7 @@ import { readWindow } from 'ocda/chunk-property';
 
 export function createChunkLoaderUI({
   hub, properties, root = document, onLoaded, beforeNavigate,
-  beforeOpen
+  beforeOpen, onHandle
 }) {
   const get = (id) => root.getElementById(id);
   let file = null;
@@ -104,7 +104,30 @@ export function createChunkLoaderUI({
     event.target.value = '';
   });
   root.querySelector('[data-action="open"]')
-    ?.addEventListener('click', () => get('fileInput')?.click());
+    ?.addEventListener('click', async () => {
+      if (!('showOpenFilePicker' in window)) {
+        get('fileInput')?.click();
+        return;
+      }
+      try {
+        const handles = await window.showOpenFilePicker({
+          multiple: false
+        });
+        const handle = handles[0];
+        if (!handle) return;
+        const selected = await handle.getFile();
+        const result = await load(selected);
+        if (result.status === 200) onHandle?.(handle);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          hub.omu.record({
+            type: 'EHU', source: 'ChunkLoaderUI',
+            target: 'ChunkLoading', action: 'OPEN_FAILED',
+            result: 'FAIL', status: 500, detail: String(error)
+          });
+        }
+      }
+    });
 
   properties.set('ChunkLoading', true);
   return {
