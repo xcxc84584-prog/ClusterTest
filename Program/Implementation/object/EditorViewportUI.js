@@ -32,8 +32,10 @@ export function createEditorViewportUI({
       numbers.push(String(startLine + line));
     }
     gutter.textContent = numbers.join('\n');
-    gutter.style.paddingTop = (first * lineHeight) + 'px';
-    gutter.scrollTop = editor.scrollTop;
+    // Keep original 16px top inset and mirror textarea scroll.
+    gutter.style.paddingTop =
+      (16 + first * lineHeight - editor.scrollTop) + 'px';
+    gutter.scrollTop = 0;
     if (get('position')) {
       const caret = editor.selectionStart;
       const prefix = text.slice(0, caret);
