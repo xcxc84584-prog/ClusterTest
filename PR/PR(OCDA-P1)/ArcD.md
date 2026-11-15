@@ -68,3 +68,8 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - LinkCore: Hub records WINDOW_START, WINDOW_READY, OPEN_WINDOW and SAVE_DOWNLOAD_REQUESTED; EDPMU stores FileState and VisibleLineRange.
 - EHU: WINDOW_FAILED (409/500), SAVE_ASSEMBLY_FAILED (500), SAVE_NO_FILE (400).
 - Relation tests: sequential next/previous, patch preservation, full Blob export, line count and status percentage. Pending browser verification.
+
+## P11
+- Objects: existing ChunkLoaderUI and EditorViewportUI; properties ChunkLoading and VisibleLineRange.
+- Event chain: window navigate -> Hub -> ChunkLoaderUI -> Footer meter/status; input/scroll -> EditorViewportUI -> VisibleLineRange.
+- EHU: WINDOW_FAILED 409/500; tests pending for progress states, line offsets, scrollbar and export integrity.
