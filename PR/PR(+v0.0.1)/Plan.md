@@ -18,3 +18,11 @@
 ## 安全／負載
 動態註冊不得視為授權。大文件讀取使用 Blob.slice。
 未來測試 1MB、100MB、1GiB、5GiB；不得宣稱未測量的效能成果。
+
+## Patch(+2): Language & Syntax
+Research: Shiki lazy grammar loading and performance guidance
+(https://shiki.style/guide/best-performance); FormatJS locale fallback
+(https://formatjs.github.io/docs/intl/).
+Implementation: separate locale catalogs, dynamic registration, editor
+highlighter adapter and UI bindings. Remaining: full translation audit,
+virtualized syntax highlighting, theme integration and browser benchmarks.
