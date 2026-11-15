@@ -16,6 +16,7 @@ export function createFileOperationsUI({
   let onNew = () => {};
   let beforeNew = () => {};
   let onClose = () => {};
+  let onSaved = async () => {};
   const patches = new PatchTree();
 
   function emit(action, status = 200, detail = {}) {
@@ -213,6 +214,7 @@ export function createFileOperationsUI({
       dirty = false;
       current = null;
       loaded = true;
+      await onSaved(source);
       publish();
       return emit('SAVE_DISK_COMPLETE', 200, {
         name, size: blob.size
@@ -252,6 +254,7 @@ export function createFileOperationsUI({
     setOnReset: (callback) => { onReset = callback; },
     setOnNew: (callback) => { onNew = callback; },
     setBeforeNew: (callback) => { beforeNew = callback; },
-    setOnClose: (callback) => { onClose = callback; }
+    setOnClose: (callback) => { onClose = callback; },
+    setOnSaved: (callback) => { onSaved = callback; }
   };
 }
