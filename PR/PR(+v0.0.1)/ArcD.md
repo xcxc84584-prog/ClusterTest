@@ -27,3 +27,12 @@ HubUnit + FileSession + URU + OMU. Production and VTE registries are isolated.
 ## Known gaps
 Authorization, complete Response routing, dynamic Relation Code, Property
 broadcast, global theme/language state and production loop instrumentation.
+
+## Patch(+2) Event Chains
+```text
+User → Locale menu → LanguageProperty.setLocale → applyLocale(UI)
+User → Editor input → EditorHighlighterView → SyntaxHighlighter
+                                             → Shiki (lazy import)
+                                             → safe DOM overlay
+```
+EHU/OMU integration for these new chains remains pending; see QuestionList1.
