@@ -42,3 +42,10 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - New release property: `LinkCore/release.json` is the only version declaration; bootstrap resolves module import URLs.
 - EHU: missing release -> VERSION_MISSING/500; bootstrap fetch failure -> console and document error marker (OMU not yet initialized).
 - Relation: bootstrap initializes LinkCore before UI object construction; no direct version reads from UI modules.
+
+## P7 — Palette architecture
+- New Object: PaletteUI; new Property: UIPalette / palette.js.
+- Chain: paletteBtn.click -> PaletteUI.open -> Hub.dispatch -> OMU; color.input -> PaletteUI.setHex -> Hub.dispatch -> EDPMU.set -> CSS vars -> localStorage.
+- Abstract: PaletteUI -> HubUnit -> {URU,OMU,EDPMU} -> UIPalette -> DOM style.
+- EHU: invalid input 400, missing dialog 404, dialog exception 500, persistence error STORAGE_FAILED.
+- Relation tests: open/close, invalid hex, RGB input, mode switching, reload persistence and log records; browser tests pending.
