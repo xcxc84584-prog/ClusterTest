@@ -6,16 +6,17 @@ import { createPaletteUI } from 'ocda/palette-ui';
 import { createChunkLoaderUI } from 'ocda/chunk-ui';
 import { createFileOperationsUI } from 'ocda/file-ui';
 import { createEditorViewportUI } from 'ocda/viewport-ui';
+import { createFileTabsUI } from 'ocda/tabs-ui';
 
 const { URU, OMU, EDPMU, Hub } = LinkCore;
 const get = (id) => document.getElementById(id);
 for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI', 'ChunkLoaderUI', 'FileOperationsUI',
-  'EditorViewportUI']) {
+  'EditorViewportUI', 'FileTabsUI']) {
   URU.register(name);
 }
 for (const name of [
   'Language', 'SyntaxHighlight', 'Version',
-  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading', 'FileState', 'VisibleLineRange'
+  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading', 'FileState', 'VisibleLineRange', 'OpenFileTabs'
 ]) {
   URU.register(name, 'Property');
 }
@@ -29,18 +30,26 @@ const files = createFileOperationsUI({
   hub: Hub, properties: EDPMU
 });
 let viewport;
+let tabs;
 const chunks = createChunkLoaderUI({
   hub: Hub, properties: EDPMU,
   beforeNavigate: () => files.canNavigate(),
+  beforeOpen: () => tabs?.beforeOpen(),
   onLoaded: (data) => {
     files.receive(data);
     viewport?.receive(data);
+    tabs?.opened(data);
   }
 });
 viewport = createEditorViewportUI({
   hub: Hub, properties: EDPMU, loader: chunks
 });
 files.setOnReset(() => chunks.reset());
+tabs = createFileTabsUI({
+  hub: Hub, properties: EDPMU, files, loader: chunks
+});
+files.setOnNew(() => tabs.addCurrent('untitled.txt'));
+files.setOnClose(() => tabs.refresh());
 
 function toggle(id, buttonId) {
   const node = get(id);
@@ -85,7 +94,9 @@ window.Cluster = Object.freeze({
   saveFile: () => files.save(),
   closeFile: () => files.close(),
   nextWindow: () => viewport.next(),
-  previousWindow: () => viewport.previous()
+  previousWindow: () => viewport.previous(),
+  tabs: () => tabs.list(),
+  selectTab: (id) => tabs.select(id)
 });
 window.VTE = Object.freeze({
   log: () => OMU.log(),
