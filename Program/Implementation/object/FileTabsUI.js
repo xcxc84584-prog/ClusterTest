@@ -81,6 +81,14 @@ export function createFileTabsUI({
     return { status: 200, result: 'PASS' };
   }
 
+  function closed() {
+    if (activeId) tabs.delete(activeId);
+    activeId = null;
+    const next = tabs.keys().next().value;
+    if (next !== undefined) select(next);
+    else render();
+  }
+
   function refresh() {
     saveActive();
     render();
@@ -90,7 +98,7 @@ export function createFileTabsUI({
     if (activeId) queueMicrotask(refresh);
   });
   return {
-    addCurrent, beforeOpen, opened, select, refresh,
+    addCurrent, beforeOpen, opened, select, refresh, closed,
     list: () => [...tabs].map(([id, tab]) => ({
       id, name: tab.name, active: id === activeId
     }))
