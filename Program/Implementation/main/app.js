@@ -14,7 +14,12 @@ for (const name of [
 ]) {
   URU.register(name, 'Property');
 }
-EDPMU.set('Version', 'OCDA-P3');
+EDPMU.set('Version', 'OCDA-P4');
+OMU.record({
+  type: 'Version', source: 'LinkCore', target: 'Version',
+  action: 'VERSION_PUBLISHED', result: 'PASS',
+  status: 200, version: 'OCDA-P4'
+});
 const language = createLanguageUI({ hub: Hub, properties: EDPMU });
 const highlighter = createHighlighterUI({
   hub: Hub, properties: EDPMU
@@ -79,7 +84,8 @@ window.Cluster = Object.freeze({
   subobject: () => [],
   version: () => EDPMU.get('Version'),
   locale: () => language.getLocale(),
-  highlight: () => highlighter.getEnabled()
+  highlight: () => highlighter.getEnabled(),
+  openHighlighter: () => highlighter.open()
 });
 window.VTE = Object.freeze({
   log: () => OMU.log(),
