@@ -71,9 +71,7 @@ export async function readWindow(file, requestedOffset, signal) {
   let end = Math.min(bytes.length, start + PREVIEW_BYTES);
   if (scanStart + end < total) {
     while (end > start && bytes[end - 1] !== 10) end--;
-    if (end === start) end = Math.min(
-      bytes.length, start + PREVIEW_BYTES
-    );
+    if (end === start) throw new Error('LINE_EXCEEDS_WINDOW');
   }
   const byteStart = scanStart + start;
   const byteEnd = scanStart + end;
