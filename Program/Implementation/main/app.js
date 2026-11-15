@@ -2,15 +2,16 @@
 import { LinkCore } from 'ocda/linkcore';
 import { createLanguageUI } from 'ocda/language-ui';
 import { createHighlighterUI } from 'ocda/highlighter-ui';
+import { createPaletteUI } from 'ocda/palette-ui';
 
 const { URU, OMU, EDPMU, Hub } = LinkCore;
 const get = (id) => document.getElementById(id);
-for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI']) {
+for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI']) {
   URU.register(name);
 }
 for (const name of [
   'Language', 'SyntaxHighlight', 'Version',
-  'HighlightShortcut', 'HighlightPerformance'
+  'HighlightShortcut', 'HighlightPerformance', 'UIPalette'
 ]) {
   URU.register(name, 'Property');
 }
@@ -19,6 +20,7 @@ const language = createLanguageUI({ hub: Hub, properties: EDPMU });
 const highlighter = createHighlighterUI({
   hub: Hub, properties: EDPMU
 });
+const palette = createPaletteUI({ hub: Hub, properties: EDPMU });
 
 function toggle(id, buttonId) {
   const node = get(id);
@@ -80,7 +82,11 @@ window.Cluster = Object.freeze({
   version: () => LinkCore.version(),
   locale: () => language.getLocale(),
   highlight: () => highlighter.getEnabled(),
-  openHighlighter: () => highlighter.open()
+  openHighlighter: () => highlighter.open(),
+  openPalette: () => palette.open(),
+  palette: () => palette.getState(),
+  setPalette: (hex) => palette.setHex(hex),
+  paletteMode: (mode) => palette.setMode(mode)
 });
 window.VTE = Object.freeze({
   log: () => OMU.log(),
