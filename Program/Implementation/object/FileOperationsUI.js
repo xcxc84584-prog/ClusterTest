@@ -1,64 +1,95 @@
-// FileOperationsUI: native file actions with partial-preview safety.
+// FileOperationsUI: edit byte windows and save full Blob without truncation.
 export function createFileOperationsUI({
-  hub, properties, root = document, getLoader
+  hub, properties, root = document
 }) {
   const get = (id) => root.getElementById(id);
   const editor = get('editor');
   let name = 'untitled.txt';
-  let partial = false;
+  let source = null;
+  let current = null;
   let dirty = false;
   let loaded = false;
+  const patches = new Map();
 
   function emit(action, status = 200, detail = {}) {
     const result = status < 400 ? 'PASS' : 'FAIL';
     const event = hub.dispatch(
       'FileOperationsUI', 'FileState', action, detail
     );
-    if (result === 'FAIL') {
-      hub.omu.record({
-        type: 'EHU', source: 'FileOperationsUI',
-        target: 'FileState', action, result, status, detail
-      });
-    }
+    if (result === 'FAIL') hub.omu.record({
+      type: 'EHU', source: 'FileOperationsUI',
+      target: 'FileState', action, result, status, detail
+    });
     return { ...event, status, result };
   }
 
-  function setState(next) {
-    properties.set('FileState', { ...next });
+  function getState() {
+    return {
+      name, dirty, loaded, windows: patches.size,
+      byteStart: current?.byteStart ?? 0,
+      byteEnd: current?.byteEnd ?? 0,
+      totalBytes: source?.size ?? 0
+    };
+  }
+
+  function publish() {
+    properties.set('FileState', getState());
+    if (get('filename')) get('filename').textContent = name;
+    if (get('syncLabel')) get('syncLabel').textContent =
+      dirty ? 'MODIFIED' : 'READY';
   }
 
   function show(text) {
     get('editorPane').hidden = false;
     get('empty').hidden = true;
     editor.value = text;
+    editor.scrollTop = 0;
     editor.dispatchEvent(new Event('input'));
   }
 
-  function receive(data) {
-    name = data.name || 'untitled.txt';
-    partial = !data.complete;
-    dirty = false;
-    loaded = true;
-    show(data.text);
-    dirty = false;
-    setState(getState());
-    return emit('OPEN_FILE', 200, {
-      name, partial, bytesRead: data.bytesRead,
-      totalBytes: data.totalBytes
+  function remember() {
+    if (!current || !dirty) return;
+    patches.set(current.byteStart, {
+      start: current.byteStart, end: current.byteEnd,
+      text: editor.value
     });
+  }
+
+  function canNavigate() {
+    remember();
+    return true;
+  }
+
+  function receive(data) {
+    if (source !== data.file) {
+      patches.clear();
+      source = data.file;
+      name = data.name || 'untitled.txt';
+      dirty = false;
+    }
+    current = {
+      byteStart: data.byteStart,
+      byteEnd: data.byteEnd
+    };
+    loaded = true;
+    const replacement = patches.get(data.byteStart);
+    show(replacement ? replacement.text : data.text);
+    publish();
+    return emit('OPEN_WINDOW', 200, { ...current });
   }
 
   function newFile() {
     if (dirty && !confirm('未儲存的變更將遺失，確定繼續？')) {
       return emit('NEW_CANCELLED', 409);
     }
+    source = null;
+    current = null;
+    patches.clear();
     name = 'untitled.txt';
-    partial = false;
     dirty = false;
     loaded = true;
     show('');
-    dirty = false;
-    setState(getState());
+    publish();
     return emit('NEW_FILE');
   }
 
@@ -66,29 +97,52 @@ export function createFileOperationsUI({
     if (dirty && !confirm('未儲存的變更將遺失，確定關閉？')) {
       return emit('CLOSE_CANCELLED', 409);
     }
-    loaded = false;
+    source = null;
+    current = null;
+    patches.clear();
     dirty = false;
-    partial = false;
+    loaded = false;
     name = 'untitled.txt';
     get('editorPane').hidden = true;
     get('empty').hidden = false;
-    setState(getState());
+    publish();
     return emit('CLOSE_FILE');
+  }
+
+  function assemble() {
+    remember();
+    if (!source) return new Blob([editor.value], {
+      type: 'text/plain;charset=utf-8'
+    });
+    const ordered = [...patches.values()]
+      .sort((a, b) => a.start - b.start);
+    const parts = [];
+    let offset = 0;
+    for (const patch of ordered) {
+      if (patch.start < offset || patch.end > source.size) {
+        throw new Error('OVERLAPPING_WINDOW');
+      }
+      parts.push(source.slice(offset, patch.start));
+      parts.push(patch.text);
+      offset = patch.end;
+    }
+    parts.push(source.slice(offset));
+    return new Blob(parts, { type: 'text/plain;charset=utf-8' });
   }
 
   function save(as = false) {
     if (!loaded) return emit('SAVE_NO_FILE', 400);
-    // A partial preview must never overwrite the source file.
-    if (partial) return emit('SAVE_PARTIAL_BLOCKED', 409, {
-      reason: 'Only the first preview segment is loaded'
-    });
-    const target = as
-      ? prompt('另存新檔名稱', name) : name;
+    const target = as ? prompt('另存新檔名稱', name) : name;
     if (!target) return emit('SAVE_CANCELLED', 409);
     const safeName = target.replace(/[\\/\x00-\x1f]/g, '_');
-    const blob = new Blob([editor.value], {
-      type: 'text/plain;charset=utf-8'
-    });
+    let blob;
+    try {
+      blob = assemble();
+    } catch (error) {
+      return emit('SAVE_ASSEMBLY_FAILED', 500, {
+        error: String(error)
+      });
+    }
     const url = URL.createObjectURL(blob);
     try {
       const anchor = root.createElement('a');
@@ -96,39 +150,37 @@ export function createFileOperationsUI({
       anchor.download = safeName;
       anchor.click();
       name = safeName;
-      dirty = false;
-      setState(getState());
-      return emit('SAVE_DOWNLOAD', 200, { name, size: blob.size });
+      // Download is not proof that a file was written to disk.
+      publish();
+      return emit('SAVE_DOWNLOAD_REQUESTED', 200, {
+        name, size: blob.size
+      });
     } finally {
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
   }
 
-  function getState() {
-    return { name, partial, dirty, loaded };
-  }
-
   editor?.addEventListener('input', () => {
     if (!loaded) return;
     dirty = true;
-    setState(getState());
+    publish();
   });
   const actions = {
-    new: newFile,
-    save: () => save(false),
+    new: newFile, save: () => save(false),
     saveas: () => save(true),
-    close,
-    closeall: close
+    close, closeall: close
   };
   for (const [action, handler] of Object.entries(actions)) {
     root.querySelectorAll('[data-action="' + action + '"]')
       .forEach((button) => button.addEventListener('click', () => {
-        const result = handler();
-        if (result.status === 200 && get('menu')) {
+        const response = handler();
+        if (response.status === 200 && get('menu')) {
           get('menu').hidden = true;
         }
       }));
   }
-  setState(getState());
-  return { receive, newFile, close, save, getState };
+  publish();
+  return {
+    receive, newFile, close, save, getState, canNavigate
+  };
 }
