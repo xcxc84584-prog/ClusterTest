@@ -84,3 +84,9 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - New property PatchTree; FileOperationsUI uses AVL tree rather than Map.
 - Event chain: FileOperationsUI.remember -> PatchTree.set -> assemble -> Blob; FileTabsUI.select -> EditorViewportUI.restore.
 - EHU: invalid UTF-8 and long lines -> WINDOW_FAILED 500. Relation test pending for no-gap window traversal and tab history isolation.
+
+## P14
+- FileHandle runtime property owned by FileOperationsUI, included in per-tab snapshot.
+- Event chain: user gesture -> File Picker -> ChunkLoaderUI -> FileOperationsUI -> FileTabsUI; Save -> Blob assembly -> createWritable -> disk -> reload.
+- EHU statuses: 409 cancel, 500 write/open failure, 501 API unsupported.
+- Relation tests pending: A/B handles, overwrite original, close dirty tabs, Explorer filter and tab switching.
