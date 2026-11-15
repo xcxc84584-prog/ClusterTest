@@ -1,21 +1,34 @@
-# ArcD — OCDA-P1
+# ArcD — OCDA P2
 
 ```mermaid
 flowchart TD
-  UI[LanguageUI / HighlighterUI] --> Hub[HubUnit]
-  Hub --> URU[UnifiedRegistrationUnit]
-  Hub --> OMU[ObjectManagementUnit]
-  UI --> EDPMU[EntireDomainPropertyManagementUnit]
-  UI --> Editor[EditorUI]
+  LanguageUI --> HubUnit
+  HighlighterUI --> HubUnit
+  HubUnit --> URU
+  HubUnit --> OMU
+  LanguageUI --> LanguageProperty
+  HighlighterUI --> SyntaxProperty
+  LanguageProperty --> EDPMU
+  SyntaxProperty --> EDPMU
+  HighlighterUI --> EditorDOM
 ```
 
-## Event chain
-UI action → Hub.dispatch → URU auto-register if needed → OMU log → property update.
+## New objects / properties
+- Object: LanguageUI, HighlighterUI.
+- Properties: Language, SyntaxHighlight, HighlightShortcut,
+  HighlightPerformance, Version.
+
+## Event chain list
+- Locale click → LanguageUI → HubUnit Request → OMU Log → EDPMU.
+- Enable click → HighlighterUI → HubUnit Request → OMU Log → EDPMU.
+- Unknown registration → HubUnit → URU auto-registration → OMU.
 
 ## EHU table
-| Error | Source | Target | Action |
+| Condition | Origin | Code | Handling |
 | --- | --- | --- | --- |
-| INVALID_REGISTRATION | URU | OMU | EHU / REGISTER |
+| Invalid registration | URU | 400 | EHU/FAIL |
+| Unsupported locale | LanguageUI | 400 | FAIL result |
+| Unsupported relation | HubUnit | TBD | Not enforced yet |
 
-## Limitations
-Full relation code and cross-object authorization are not yet enforced.
+## Relationship tests
+Browser PASS/FAIL and dependency matrix validation are pending.
