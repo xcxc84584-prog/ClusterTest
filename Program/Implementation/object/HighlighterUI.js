@@ -1,5 +1,5 @@
 // HighlighterUI: bounded rendering, preserving the original editor DOM.
-import { highlight } from '../property/highlighter.js?v=ocda-p5';
+import { highlight } from 'ocda/highlighter-property';
 
 export function createHighlighterUI({ hub, properties, root = document }) {
   const get = (id) => root.getElementById(id);
