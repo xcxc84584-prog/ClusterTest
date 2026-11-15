@@ -14,26 +14,32 @@ for (const name of [
 ]) {
   URU.register(name, 'Property');
 }
-EDPMU.set('Version', 'OCDA-P2');
+EDPMU.set('Version', 'OCDA-P3');
 const language = createLanguageUI({ hub: Hub, properties: EDPMU });
 const highlighter = createHighlighterUI({
   hub: Hub, properties: EDPMU
 });
 
-function toggle(id) {
+function toggle(id, buttonId) {
   const node = get(id);
-  if (node) node.hidden = !node.hidden;
+  if (!node) return;
+  node.hidden = !node.hidden;
+  if (buttonId) {
+    get(buttonId)?.setAttribute('aria-expanded', String(!node.hidden));
+  }
 }
-get('menuBtn')?.addEventListener('click', () => toggle('menu'));
+get('menuBtn')?.addEventListener('click', () => toggle('menu', 'menuBtn'));
 get('toolBtn')?.addEventListener(
-  'click', () => toggle('toolOptions')
+  'click', () => toggle('toolOptions', 'toolBtn')
 );
 get('languageBtn')?.addEventListener(
-  'click', () => toggle('languageOptions')
+  'click', () => toggle('languageOptions', 'languageBtn')
 );
 document.querySelectorAll('[data-locale]').forEach((button) => {
   button.addEventListener('click', () => {
     language.setLocale(button.dataset.locale);
+    get('languageOptions').hidden = true;
+    get('languageBtn').setAttribute('aria-expanded', 'false');
   });
 });
 function sample() {
