@@ -33,3 +33,10 @@
 - Runtime: fetch release.json with no-store, resolve six modules via one import map and shared build identifier.
 - Load: one manifest request and one module request per module; browser cache reuse within build.
 - Risk: partial GitHub Pages deployment may temporarily mix manifest and source; browser E2E required.
+
+## P7 — Palette implementation
+- Requirements: original File Tool palette dialog; RGB color picker, numeric channels, dark/light endpoints, live CSS tokens, persistence and Console diagnostics.
+- Knowledge: CSS custom properties, HTML dialog, contrast and color conversion, localStorage failure handling.
+- Security: strict hex validation, no HTML injection, no keys, no remote palette calls.
+- Load: constant-time token update per change; no editor re-tokenization.
+- Risk: existing ClusterOpt CSS may contain hard-coded colors; browser contrast audit pending.
