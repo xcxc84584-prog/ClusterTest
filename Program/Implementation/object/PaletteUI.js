@@ -59,6 +59,7 @@ export function createPaletteUI({ hub, properties, root = document }) {
   }
 
   function setHex(hex) {
+    if (typeof hex !== 'string') return { status: 400, result: 'FAIL' };
     return apply({ ...state, hex: hex.toLowerCase() });
   }
 
@@ -84,8 +85,12 @@ export function createPaletteUI({ hub, properties, root = document }) {
       ).join(''));
     });
   });
-  get('paletteDark')?.addEventListener('click', () => setMode('dark'));
-  get('paletteLight')?.addEventListener('click', () => setMode('light'));
+  get('paletteDark')?.addEventListener('click', () => {
+    apply({ hex: '#000000', mode: 'dark' });
+  });
+  get('paletteLight')?.addEventListener('click', () => {
+    apply({ hex: '#ffffff', mode: 'light' });
+  });
 
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
