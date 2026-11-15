@@ -1,3 +1,240 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ClusterTest v0.0.1</title><link rel="stylesheet" href="./style.css"></head>
-<body><header><strong>ClusterTest</strong><small>v0.0.1 · OCDA editor prototype</small></header><nav><button id="open">開啟文件</button><button id="save">儲存</button><span id="status">就緒</span></nav><main><aside><h3>Documents</h3><ul id="documents"></ul></aside><section><div id="filename">未命名</div><textarea id="editor" spellcheck="false" aria-label="文件編輯器"></textarea></section></main><input type="file" id="file" hidden><script type="module" src="./Implementation/main.js"></script></body></html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>
+      ClusterTest 0.0.1
+    </title>
+    <link rel="stylesheet" href="./style.css?v=clustertest001-ui">
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <div class="brand">
+          <span class="diamond">
+            ◇
+          </span>
+          <strong>
+            Cluster
+          </strong>
+          <small>v0.0.1</small>
+        </div>
+        <div class="header-utility"><button id="explorerToggle" type="button" aria-controls="explorerPanel" aria-expanded="false" title="檔案總管">☰ Explorer</button><button id="explorerPowerShell" type="button" title="PowerShell" aria-label="PowerShell" aria-pressed="false">⌁</button></div><div class="menu-wrap">
+          <button id="menuBtn">
+            檔案⌄
+          </button>
+          <nav id="menu" hidden aria-label="檔案選單">
+            <button data-action="new">
+              建立新檔
+            </button>
+            <button data-action="open">
+              開啟檔案
+            </button>
+            <div class="menu-divider"></div>
+            <button data-action="save">
+              儲存
+            </button>
+            <button data-action="saveas">
+              另存新檔
+            </button>
+            <div class="menu-divider"></div>
+            <button data-action="close">
+              關閉分頁
+            </button>
+            <button data-action="closeall">
+              關閉全部
+            </button>
+            <div class="menu-divider">
+            </div>
+            <button id="toolBtn" type="button" aria-expanded="false">
+              工具 ›
+            </button>
+            <div id="toolOptions" hidden role="group" aria-label="工具">
+                <div class="file-tool-heading">FILE TOOL <span>WORKSPACE</span></div>
+              <button id="languageBtn" type="button" aria-expanded="false">
+                語言 ›
+              </button>
+              <div id="languageOptions" hidden>
+                <button data-locale="zh-Hant" type="button">
+                  繁體中文 <span class="locale-check"></span>
+                </button>
+                <button data-locale="en" type="button">
+                  English <span class="locale-check"></span>
+                </button>
+              </div>
+              <button id="highlighterBtn" type="button">◇ 文本著色器</button>
+              <button id="paletteBtn" type="button" aria-expanded="false">
+                介面調色盤 ›
+              </button>
+              <button id="blockedTypesBtn" type="button" aria-haspopup="dialog">▧ 屏蔽檔案類型 <span class="file-tool-chevron">›</span></button>
+              <div class="menu-divider"></div>
+              <label class="priority-heading" for="priority">儲存優先級</label>
+              <select id="priority" title="存儲優先級" aria-label="儲存優先級">
+                <option value="internal">內部優先</option>
+                <option value="external">外部優先</option>
+              </select>
+
+            </div>
+          </nav>
+        </div>
+      </header>
+      <div id="clusterWorkspaceShell"><aside id="explorerPanel" hidden aria-label="Explorer"><div class="explorer-header"><strong id="explorerTitle">檔案總管</strong><button id="explorerClose" type="button" title="關閉">×</button></div><div class="explorer-actions"><button id="explorerAddFolder" type="button" title="導入本地資料夾">▣ 導入資料夾</button><button id="explorerAddFile" type="button" title="導入本地文件">◇ 導入文件</button><button id="explorerRefresh" type="button" title="重新整理" aria-label="重新整理">↻</button></div><input id="explorerSearch" type="search" readonly data-lpignore="true" data-1p-ignore="true" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="搜尋文件" autocomplete="off" aria-label="搜尋文件"><div id="explorerTree" role="tree"></div></aside><div id="clusterEditorColumn"><div id="tabs">
+      </div>
+      <main id="workspace">
+        <div id="empty">
+          <div class="bigdiamond">
+            ◇
+          </div>
+          <h1>
+            Cluster
+          </h1>
+          <p>
+            選擇「檔案」建立或開啟文件
+          </p>
+        </div>
+        <div id="editorPane" hidden>
+          <div id="gutter">
+            1
+          </div>
+          <div id="tabGuide" aria-hidden="true"></div>
+          <pre id="highlightOverlay" aria-hidden="true"></pre>
+          <textarea id="editor" spellcheck="false" wrap="off" aria-label="文件編輯器">
+          </textarea>
+        </div>
+      </main></div></div>
+      <div id="goLineBar" role="group" aria-label="跳轉行工具"><label for="goLineInput">行號</label><input id="goLineInput" type="number" min="1" step="1" value="1"><button id="goLineButton" type="button">跳至行</button><span class="goLineHint">載入完成後才會跳轉</span></div>
+      <footer>
+        <div class="meter">
+          <div id="meterFill">
+          </div>
+        </div>
+        <span id="meterPercent" aria-live="polite" hidden style="font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;min-width:3.5em;text-align:right">0%</span>
+        <span id="syncLabel" class="sync-label" aria-live="polite">UNVERIFIED</span>
+        <span id="status">
+          就緒
+        </span>
+<span id="filename">
+          未命名.txt
+        </span>
+        <span class="grow">
+        </span>
+        <span id="position">
+          Ln 1, Col 1
+        </span>
+        <span>
+          UTF-8
+        </span>
+        <span id="fileType">
+          純文字
+        </span>
+      </footer>
+    </div>
+    <dialog id="encodingDialog" class="highlighter-dialog" aria-labelledby="encodingTitle">
+      <div class="palette-modal-header"><div><div class="palette-eyebrow">CLUSTER / FTI</div>
+      <h2 id="encodingTitle">選擇文件編碼</h2></div></div>
+      <div class="highlighter-content"><p id="encodingMessage"></p>
+      <label for="encodingSelect">來源編碼 / Source encoding</label>
+      <select id="encodingSelect"><option value="Big5">Big5</option>
+      <option value="GBK">GBK</option><option value="GB18030">GB18030</option></select>
+      <p id="encodingNotice">編輯器將轉換為 UTF-8，儲存時使用 UTF-8；原始文件在儲存前不變。</p></div>
+      <div class="palette-modal-footer"><button id="encodingCancel" type="button">取消 / Cancel</button>
+      <button id="encodingConfirm" type="button">開啟 / Open</button></div>
+    </dialog>
+    <dialog id="paletteDialog" aria-labelledby="paletteTitle">
+      <div class="palette-modal-header">
+        <div>
+          <div class="palette-eyebrow">CLUSTER / APPEARANCE</div>
+          <h2 id="paletteTitle">介面調色盤</h2>
+        </div>
+        <button id="paletteClose" class="palette-close" type="button"
+          aria-label="關閉">×</button>
+      </div>
+      <div class="palette-modal-body">
+        <div class="palette-preview" aria-hidden="true">
+          <div class="palette-preview-top">
+            <span class="palette-preview-dot"></span>
+            <span>CLUSTER</span>
+            <span class="palette-preview-caption">UI PREVIEW</span>
+          </div>
+          <div class="palette-preview-content">
+            <div class="palette-preview-sidebar"></div>
+            <div class="palette-preview-editor">
+              <div class="palette-preview-line"></div>
+              <div class="palette-preview-line short"></div>
+              <div class="palette-preview-line medium"></div>
+            </div>
+          </div>
+        </div>
+        <div class="palette-section-title">
+          <label id="paletteLabel" for="palettePicker">介面色系 RGB</label>
+          <span id="paletteHex">#000000</span>
+        </div>
+        <div class="palette-picker-row">
+          <input id="palettePicker" type="color" value="#000000">
+          <span id="paletteHint">選擇顏色以即時預覽整體介面</span>
+        </div>
+        <div class="palette-channels">
+          <label>R <input data-rgb="0" type="number" min="0" max="255"></label>
+          <label>G <input data-rgb="1" type="number" min="0" max="255"></label>
+          <label>B <input data-rgb="2" type="number" min="0" max="255"></label>
+        </div>
+        <div class="palette-section-title">
+          <span id="palettePresetLabel">端點風格</span>
+          <span id="paletteMode">DARK</span>
+        </div>
+        <div class="palette-presets">
+          <button id="paletteDark" type="button">黑色端點</button>
+          <button id="paletteLight" type="button">白色端點</button>
+        </div>
+      </div>
+      <div class="palette-modal-footer">
+        <span id="paletteFooterHint">設定會自動儲存</span>
+        <button id="paletteDone" type="button">完成</button>
+      </div>
+    </dialog>
+    <dialog id="highlighterDialog" aria-labelledby="highlighterTitle" class="highlighter-dialog">
+      <div class="palette-modal-header"><div><div class="palette-eyebrow">CLUSTER / EDITOR</div><h2 id="highlighterTitle">文本著色器</h2></div><button id="highlighterClose" class="palette-close" type="button" aria-label="關閉">×</button></div>
+      <div class="highlighter-content"><label class="highlighter-switch"><input id="highlighterEnabled" type="checkbox" checked> 啟用 Shiki 語法著色</label><p id="highlighterHint">依檔案類型自動識別語言；色彩跟隨介面調色盤。</p><p id="highlighterSlices">僅處理被著色切片及其相鄰切片，不修改文件。</p><label class="highlighter-switch"><input id="highlighterPerformance" type="checkbox"><span id="highlighterPerformanceLabel">效能化（僅著色可見文本）</span></label><p id="highlighterPerformanceHint">僅解析目前視窗中的文字；捲動離開後卸載舊著色資料。</p><section class="highlighter-shortcut" aria-labelledby="highlighterShortcutLabel">
+          <div class="highlighter-shortcut-heading">
+            <div><h3 id="highlighterShortcutLabel">切換快捷鍵</h3>
+              <p id="highlighterShortcutDescription">點擊輸入框，直接按下想使用的快捷鍵。</p></div>
+            <span id="highlighterShortcutScope" class="highlighter-shortcut-tag">EDITOR ONLY</span>
+          </div>
+          <label for="highlighterShortcutInput" id="highlighterShortcutCombination" class="highlighter-shortcut-input-label">快捷鍵組合</label>
+          <div class="highlighter-shortcut-field">
+            <span class="highlighter-shortcut-icon" aria-hidden="true">⌨</span>
+            <input id="highlighterShortcutInput" type="text" autocomplete="off"
+              spellcheck="false" inputmode="none" aria-describedby="highlighterShortcutHelp highlighterShortcutStatus"
+              placeholder="點擊後按 Ctrl + Shift + H" readonly>
+            <button id="highlighterShortcutReset" type="button" title="恢復預設快捷鍵">重設</button>
+          </div>
+          <p id="highlighterShortcutHelp">Ctrl 必選，Shift 可選；支援 A–Z、0–9。Esc 取消錄製。</p>
+          <p id="highlighterShortcutStatus" role="status" aria-live="polite"></p>
+          <div class="highlighter-shortcut-actions">
+            <button id="highlighterShortcutSave" type="button" disabled>儲存快捷鍵</button>
+          </div>
+        </section><p id="highlighterState">語法引擎按需載入</p></div>
+      <div class="palette-modal-footer"><span>CLUSTER / TEXT</span><button id="highlighterDone" type="button">完成</button></div>
+    </dialog>
+    <input type="file" id="fileInput" multiple hidden>
+    <script type="module" src="./Implementation/main.js?v=clustertest001-ui"></script>
+  <dialog id="blockedTypesDialog" class="file-tool-dialog" aria-labelledby="blockedTypesTitle">
+    <div class="file-tool-dialog-head"><div><span class="file-tool-eyebrow">CLUSTER / FILE TOOL</span><h2 id="blockedTypesTitle">屏蔽檔案類型</h2><p id="blockedTypesDescription">隱藏 Explorer 中的指定副檔名，不會刪除原始檔案。</p></div><button type="button" id="blockedTypesClose" aria-label="關閉">×</button></div>
+    <div class="file-tool-dialog-body">
+      <form id="blockedTypesForm" class="file-tool-add-form"><label for="blockedTypesInput">新增副檔名</label><div class="file-tool-input-row"><input id="blockedTypesInput" placeholder=".mp4" maxlength="21" autocomplete="off" required><button type="submit">＋ 新增</button></div></form>
+      <div class="file-tool-list-head"><span><span id="blockedTypesListLabel">已屏蔽類型</span> <strong id="blockedTypesCount">0</strong></span><button type="button" id="blockedTypesReset">還原預設</button></div>
+      <div id="blockedTypesList" class="file-tool-list" role="list"></div>
+      <p id="blockedTypesError" class="file-tool-error" role="status" aria-live="polite"></p>
+    </div>
+    <div class="file-tool-dialog-footer"><span id="blockedTypesFooter">變更自動儲存並立即套用 Explorer</span><button type="button" id="blockedTypesDone">完成</button></div>
+  </dialog>
+  <dialog id="ftiDialog" aria-labelledby="ftiDialogTitle" aria-describedby="ftiReason">
+  <div class="fti-dialog-head"><span class="fti-symbol">◇</span><strong id="ftiDialogTitle">文件解析失敗</strong></div>
+  <p id="ftiFileName"></p>
+  <p id="ftiReason"></p>
+  <p class="fti-note">強制以文字模式顯示；無法解碼的位元組會顯示為 �。未修改的切片保留原始位元組，修改後儲存可能改變其編碼。</p>
+  <div class="fti-actions"><button type="button" id="ftiCancel">取消載入</button><button type="button" id="ftiForce">強制載入（文字）</button></div>
+</dialog>
+</body>
+</html>
