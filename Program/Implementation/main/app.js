@@ -4,15 +4,16 @@ import { createLanguageUI } from 'ocda/language-ui';
 import { createHighlighterUI } from 'ocda/highlighter-ui';
 import { createPaletteUI } from 'ocda/palette-ui';
 import { createChunkLoaderUI } from 'ocda/chunk-ui';
+import { createFileOperationsUI } from 'ocda/file-ui';
 
 const { URU, OMU, EDPMU, Hub } = LinkCore;
 const get = (id) => document.getElementById(id);
-for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI', 'ChunkLoaderUI']) {
+for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI', 'ChunkLoaderUI', 'FileOperationsUI']) {
   URU.register(name);
 }
 for (const name of [
   'Language', 'SyntaxHighlight', 'Version',
-  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading'
+  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading', 'FileState'
 ]) {
   URU.register(name, 'Property');
 }
@@ -22,21 +23,12 @@ const highlighter = createHighlighterUI({
   hub: Hub, properties: EDPMU
 });
 const palette = createPaletteUI({ hub: Hub, properties: EDPMU });
+const files = createFileOperationsUI({
+  hub: Hub, properties: EDPMU
+});
 const chunks = createChunkLoaderUI({
   hub: Hub, properties: EDPMU,
-  onLoaded: ({ text, name, complete, bytesRead, totalBytes }) => {
-    get('editorPane').hidden = false;
-    get('empty').hidden = true;
-    get('editor').value = text;
-    get('gutter').textContent = String(
-      text.split('\n').length
-    );
-    get('editor').dispatchEvent(new Event('input'));
-    OMU.record({ type: 'Log', source: 'ChunkLoaderUI',
-      target: 'EditorUI', action: 'PREVIEW_READY', result: 'PASS',
-      status: 200, detail: { name, complete, bytesRead, totalBytes }
-    });
-  }
+  onLoaded: (data) => files.receive(data)
 });
 
 function toggle(id, buttonId) {
@@ -61,28 +53,6 @@ document.querySelectorAll('[data-locale]').forEach((button) => {
     get('languageBtn').setAttribute('aria-expanded', 'false');
   });
 });
-function sample() {
-  const editor = get('editor');
-  if (!editor) return;
-  get('editorPane').hidden = false;
-  get('empty').hidden = true;
-  editor.value = [
-    '// OCDA syntax test',
-    'const greet = "Hello Cluster";',
-    'function demo() {',
-    '    return greet;',
-    '}',
-    ''
-  ].join('\n');
-  get('gutter').textContent = '1\n2\n3\n4\n5\n6';
-  highlighter.render();
-}
-document.querySelectorAll('[data-action="new"]').forEach((button) => {
-  button.addEventListener('click', () => {
-    sample();
-    get('menu').hidden = true;
-  });
-});
 get('editor')?.addEventListener('input', () => {
   const count = get('editor').value.split('\n').length;
   get('gutter').textContent = Array.from(
@@ -105,8 +75,11 @@ window.Cluster = Object.freeze({
   setPalette: (hex) => palette.setHex(hex),
   paletteMode: (mode) => palette.setMode(mode),
   chunkLoading: () => chunks.getState(),
-  setChunkLoading: (enabled) => chunks.setEnabled(enabled),
-  loadFile: (file) => chunks.load(file)
+  loadFile: (file) => chunks.load(file),
+  fileState: () => files.getState(),
+  newFile: () => files.newFile(),
+  saveFile: () => files.save(),
+  closeFile: () => files.close()
 });
 window.VTE = Object.freeze({
   log: () => OMU.log(),
@@ -116,4 +89,3 @@ window.VTE = Object.freeze({
   A: (source, target, action) => Hub.simulate(source, target, action)
 });
 language.setLocale('zh-Hant');
-sample();
