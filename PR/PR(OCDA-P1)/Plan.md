@@ -23,3 +23,7 @@
 ## Patch status
 - +1: initial skeleton.
 - +2: modular UI adapters and rendering scheduler.
+
+## P3 update
+- Version synchronized to OCDA-P3 across bootstrap and HTML.
+- Menu state and editor fallback improved; browser E2E pending.
