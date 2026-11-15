@@ -40,7 +40,6 @@ export function createFileTabsUI({
   }
 
   function addCurrent(name, file = null) {
-    saveActive();
     const id = nextId++;
     tabs.set(id, {
       name, file, session: files.snapshot()
@@ -50,6 +49,10 @@ export function createFileTabsUI({
       'TAB_CREATED', { id, name });
     render();
     return id;
+  }
+
+  function beforeOpen() {
+    saveActive();
   }
 
   function opened(data) {
@@ -87,7 +90,7 @@ export function createFileTabsUI({
     if (activeId) queueMicrotask(refresh);
   });
   return {
-    addCurrent, opened, select, refresh,
+    addCurrent, beforeOpen, opened, select, refresh,
     list: () => [...tabs].map(([id, tab]) => ({
       id, name: tab.name, active: id === activeId
     }))
