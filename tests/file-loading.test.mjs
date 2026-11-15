@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { FileLoader } from '../Implementation/Objects/FileLoader.js';
-import { FileSession } from '../Implementation/Objects/FileSession.js';
-import { Document } from '../Implementation/Objects/Document.js';
+import { FileLoader } from '../Program/Objects/FileLoader.js';
+import { FileSession } from '../Program/Objects/FileSession.js';
+import { Document } from '../Program/Objects/Document.js';
 
 test('FileLoader reads only requested byte range', async () => {
   const loader = new FileLoader();
