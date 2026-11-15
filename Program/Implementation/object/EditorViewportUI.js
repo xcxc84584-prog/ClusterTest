@@ -66,6 +66,28 @@ export function createEditorViewportUI({
     });
   }
 
+  function snapshot() {
+    return {
+      startLine, windowStart, windowEnd, totalBytes,
+      history: history.map((entry) => ({ ...entry }))
+    };
+  }
+
+  function restore(state) {
+    history.length = 0;
+    history.push(...state.history.map((entry) => ({ ...entry })));
+    startLine = state.startLine;
+    windowStart = state.windowStart;
+    windowEnd = state.windowEnd;
+    totalBytes = state.totalBytes;
+    schedule();
+  }
+
+  function reset() {
+    restore({ startLine: 1, windowStart: 0,
+      windowEnd: 0, totalBytes: 0, history: [] });
+  }
+
   function receive(data) {
     if (data.byteStart === 0) {
       history.length = 0;
@@ -125,5 +147,6 @@ export function createEditorViewportUI({
   }, { passive: true });
   hub.dispatch('EditorViewportUI', 'VisibleLineRange',
     'VIEWPORT_READY');
-  return { receive, next, previous, render };
+  return { receive, next, previous, render,
+    snapshot, restore, reset };
 }
