@@ -16,8 +16,10 @@ export function createHighlighterUI({ hub, properties, root = document }) {
     const source = editor.value;
     const bounded = source.length > 131072;
     const safeText = bounded ? source.slice(0, 131072) : source;
-    overlay.innerHTML = enabled ? highlight(safeText) : '';
-    editor.classList.toggle('highlight-active', enabled);
+    overlay.innerHTML = enabled && !bounded
+      ? highlight(safeText) : '';
+    // Never hide text that has no corresponding overlay tokens.
+    editor.classList.toggle('highlight-active', enabled && !bounded);
     overlay.scrollTop = editor.scrollTop;
     overlay.scrollLeft = editor.scrollLeft;
     const state = get('highlighterState');
