@@ -1,6 +1,6 @@
 // FileTabsUI: independent editor sessions in original #tabs/#explorerTree.
 export function createFileTabsUI({
-  hub, properties, files, loader, root = document
+  hub, properties, files, loader, viewport, root = document
 }) {
   const tabs = new Map();
   let activeId = null;
@@ -10,7 +10,9 @@ export function createFileTabsUI({
 
   function saveActive() {
     if (activeId && tabs.has(activeId)) {
-      tabs.get(activeId).session = files.snapshot();
+      const active = tabs.get(activeId);
+      active.session = files.snapshot();
+      active.viewport = viewport.snapshot();
     }
   }
 
@@ -42,7 +44,8 @@ export function createFileTabsUI({
   function addCurrent(name, file = null) {
     const id = nextId++;
     tabs.set(id, {
-      name, file, session: files.snapshot()
+      name, file, session: files.snapshot(),
+      viewport: viewport.snapshot()
     });
     activeId = id;
     hub.dispatch('FileTabsUI', 'OpenFileTabs',
@@ -75,6 +78,7 @@ export function createFileTabsUI({
     activeId = id;
     loader.attach(tab.file);
     files.restore(tab.session);
+    viewport.restore(tab.viewport);
     hub.dispatch('FileTabsUI', 'OpenFileTabs',
       'TAB_SELECTED', { id });
     render();
@@ -86,7 +90,10 @@ export function createFileTabsUI({
     activeId = null;
     const next = tabs.keys().next().value;
     if (next !== undefined) select(next);
-    else render();
+    else {
+      viewport.reset();
+      render();
+    }
   }
 
   function refresh() {
