@@ -1,7 +1,7 @@
 // OCDA P2 bootstrap: UI adapters communicate through LinkCore.
-import { LinkCore } from '../LinkCore/core.js';
-import { createLanguageUI } from '../object/LanguageUI.js';
-import { createHighlighterUI } from '../object/HighlighterUI.js';
+import { LinkCore } from '../LinkCore/core.js?v=ocda-p5';
+import { createLanguageUI } from '../object/LanguageUI.js?v=ocda-p5';
+import { createHighlighterUI } from '../object/HighlighterUI.js?v=ocda-p5';
 
 const { URU, OMU, EDPMU, Hub } = LinkCore;
 const get = (id) => document.getElementById(id);
@@ -14,11 +14,11 @@ for (const name of [
 ]) {
   URU.register(name, 'Property');
 }
-EDPMU.set('Version', 'OCDA-P4');
+EDPMU.set('Version', 'OCDA-P5');
 OMU.record({
   type: 'Version', source: 'LinkCore', target: 'Version',
   action: 'VERSION_PUBLISHED', result: 'PASS',
-  status: 200, version: 'OCDA-P4'
+  status: 200, version: 'OCDA-P5'
 });
 const language = createLanguageUI({ hub: Hub, properties: EDPMU });
 const highlighter = createHighlighterUI({
