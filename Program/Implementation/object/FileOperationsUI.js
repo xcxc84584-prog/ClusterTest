@@ -7,6 +7,7 @@ export function createFileOperationsUI({
   const editor = get('editor');
   let name = 'untitled.txt';
   let source = null;
+  let fileHandle = null;
   let current = null;
   let dirty = false;
   let loaded = false;
@@ -31,7 +32,8 @@ export function createFileOperationsUI({
 
   function getState() {
     return {
-      name, dirty, loaded, windows: patches.size,
+      name, dirty, loaded, writable: Boolean(fileHandle),
+      windows: patches.size,
       byteStart: current?.byteStart ?? 0,
       byteEnd: current?.byteEnd ?? 0,
       totalBytes: source?.size ?? 0
@@ -89,7 +91,8 @@ export function createFileOperationsUI({
   function snapshot() {
     remember();
     return {
-      name, source, current: current && { ...current },
+      name, source, fileHandle,
+      current: current && { ...current },
       dirty, loaded, text: editor.value,
       patches: [...patches.entries()]
     };
@@ -97,6 +100,7 @@ export function createFileOperationsUI({
 
   function restore(state) {
     source = state.source;
+    fileHandle = state.fileHandle || null;
     current = state.current && { ...state.current };
     name = state.name;
     dirty = state.dirty;
@@ -120,6 +124,7 @@ export function createFileOperationsUI({
     beforeNew();
     onReset();
     source = null;
+    fileHandle = null;
     current = null;
     patches.clear();
     name = 'untitled.txt';
@@ -168,10 +173,9 @@ export function createFileOperationsUI({
     return new Blob(parts, { type: 'text/plain;charset=utf-8' });
   }
 
-  function save(as = false) {
+  async function save(as = false) {
     if (!loaded) return emit('SAVE_NO_FILE', 400);
-    const target = as ? prompt('另存新檔名稱', name) : name;
-    if (!target) return emit('SAVE_CANCELLED', 409);
+    const target = name;
     const safeName = target.replace(/[\\/\x00-\x1f]/g, '_');
     let blob;
     try {
@@ -181,20 +185,42 @@ export function createFileOperationsUI({
         error: String(error)
       });
     }
-    const url = URL.createObjectURL(blob);
     try {
-      const anchor = root.createElement('a');
-      anchor.href = url;
-      anchor.download = safeName;
-      anchor.click();
-      name = safeName;
-      // Download is not proof that a file was written to disk.
+      let targetHandle = as ? null : fileHandle;
+      if (!targetHandle && 'showSaveFilePicker' in window) {
+        targetHandle = await window.showSaveFilePicker({
+          suggestedName: safeName
+        });
+      }
+      if (!targetHandle) {
+        return emit('SAVE_NO_HANDLE', 501, {
+          reason: 'FILE_SYSTEM_ACCESS_UNAVAILABLE'
+        });
+      }
+      const writable = await targetHandle.createWritable();
+      try {
+        await writable.write(blob);
+        await writable.close();
+      } catch (error) {
+        await writable.abort().catch(() => {});
+        throw error;
+      }
+      fileHandle = targetHandle;
+      name = targetHandle.name;
+      // Rebase after a successful write to avoid duplicate patches.
+      source = await targetHandle.getFile();
+      patches.clear();
+      dirty = false;
+      current = null;
+      loaded = true;
       publish();
-      return emit('SAVE_DOWNLOAD_REQUESTED', 200, {
+      return emit('SAVE_DISK_COMPLETE', 200, {
         name, size: blob.size
       });
-    } finally {
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      const cancelled = error.name === 'AbortError';
+      return emit(cancelled ? 'SAVE_CANCELLED' : 'SAVE_FAILED',
+        cancelled ? 409 : 500, { error: String(error) });
     }
   }
 
@@ -211,15 +237,17 @@ export function createFileOperationsUI({
   for (const [action, handler] of Object.entries(actions)) {
     root.querySelectorAll('[data-action="' + action + '"]')
       .forEach((button) => button.addEventListener('click', () => {
-        const response = handler();
-        if (response.status === 200 && get('menu')) {
-          get('menu').hidden = true;
-        }
+        Promise.resolve(handler()).then((response) => {
+          if (response.status === 200 && get('menu')) {
+            get('menu').hidden = true;
+          }
+        });
       }));
   }
   publish();
   return {
     receive, newFile, close, save, getState, canNavigate,
+    setHandle: (handle) => { fileHandle = handle; },
     snapshot, restore,
     setOnReset: (callback) => { onReset = callback; },
     setOnNew: (callback) => { onNew = callback; },
