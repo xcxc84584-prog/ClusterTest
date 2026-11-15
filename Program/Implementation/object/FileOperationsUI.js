@@ -12,6 +12,7 @@ export function createFileOperationsUI({
   let programmatic = false;
   let onReset = () => {};
   let onNew = () => {};
+  let beforeNew = () => {};
   let onClose = () => {};
   const patches = new Map();
 
@@ -115,6 +116,7 @@ export function createFileOperationsUI({
     if (dirty && !confirm('未儲存的變更將遺失，確定繼續？')) {
       return emit('NEW_CANCELLED', 409);
     }
+    beforeNew();
     onReset();
     source = null;
     current = null;
@@ -221,6 +223,7 @@ export function createFileOperationsUI({
     snapshot, restore,
     setOnReset: (callback) => { onReset = callback; },
     setOnNew: (callback) => { onNew = callback; },
+    setBeforeNew: (callback) => { beforeNew = callback; },
     setOnClose: (callback) => { onClose = callback; }
   };
 }
