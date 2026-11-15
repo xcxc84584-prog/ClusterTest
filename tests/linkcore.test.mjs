@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { UnifiedRegistrationUnit } from '../Implementation/LinkCore/UnifiedRegistrationUnit.js';
-import { ObjectManagementUnit } from '../Implementation/LinkCore/ObjectManagementUnit.js';
-import { HubUnit } from '../Implementation/LinkCore/HubUnit.js';
-import { EntireDomainPropertyManagementUnit } from '../Implementation/LinkCore/EntireDomainPropertyManagementUnit.js';
+import { UnifiedRegistrationUnit } from '../Program/LinkCore/UnifiedRegistrationUnit.js';
+import { ObjectManagementUnit } from '../Program/LinkCore/ObjectManagementUnit.js';
+import { HubUnit } from '../Program/LinkCore/HubUnit.js';
+import { EntireDomainPropertyManagementUnit } from '../Program/LinkCore/EntireDomainPropertyManagementUnit.js';
 
 test('HubUnit routes registered requests and records failure/EHU', async () => {
   const registry = new UnifiedRegistrationUnit();
