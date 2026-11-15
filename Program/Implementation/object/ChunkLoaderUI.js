@@ -15,6 +15,7 @@ export function createChunkLoaderUI({
     if (fill) {
       fill.style.width = percent + '%';
       fill.dataset.phase = phase;
+      // Original ClusterOpt: yellow busy, green success, red failure.
       fill.style.backgroundColor = phase === 'error'
         ? '#d75b5b' : phase === 'done' ? '#47a875' : '#d8ac50';
     }
@@ -41,7 +42,9 @@ export function createChunkLoaderUI({
     active?.abort();
     const controller = new AbortController();
     active = controller;
-    progress(0, 100, '讀取切片中…');
+    const requested = Math.max(0, Math.min(file.size, offset));
+    const required = Math.min(1024 * 1024, file.size - requested);
+    progress(0, required || 1, '讀取所需切片中…');
     hub.dispatch('ChunkLoaderUI', 'ChunkLoading', 'WINDOW_START',
       { offset });
     try {
@@ -51,15 +54,15 @@ export function createChunkLoaderUI({
       }
       last = { name: file.name, file, ...window };
       onLoaded?.(last);
-      progress(window.byteEnd, file.size,
-        '已定位 ' + window.byteEnd + ' / ' + file.size + ' bytes',
-        'done');
+      progress(required, required || 1,
+        '所需切片已載入 (' + window.byteStart + '–' +
+        window.byteEnd + ' / ' + file.size + ' bytes)', 'done');
       hub.dispatch('ChunkLoaderUI', 'ChunkLoading', 'WINDOW_READY',
         { start: window.byteStart, end: window.byteEnd });
       return { status: 200, result: 'PASS', ...last };
     } catch (error) {
       const status = error.name === 'AbortError' ? 409 : 500;
-      progress(0, 100, '載入失敗', 'error');
+      progress(0, required || 1, '載入失敗', 'error');
       hub.omu.record({
         type: 'EHU', source: 'ChunkLoaderUI',
         target: 'ChunkLoading', action: 'WINDOW_FAILED',
