@@ -49,8 +49,46 @@ export function createHighlighterUI({ hub, properties, root = document }) {
     return { ...response, status: 200 };
   }
   function open() {
-    hub.dispatch('HighlighterUI', 'SyntaxHighlight', 'OPEN_SETTINGS');
-    get('highlighterDialog')?.showModal();
+    const dialog = get('highlighterDialog');
+    if (!dialog) {
+      hub.dispatch(
+        'HighlighterUI', 'SyntaxHighlight', 'DIALOG_MISSING'
+      );
+      return { status: 404, result: 'FAIL' };
+    }
+    try {
+      if (!dialog.open) dialog.showModal();
+      const event = hub.dispatch(
+        'HighlighterUI', 'SyntaxHighlight', 'OPEN_SETTINGS'
+      );
+      return { ...event, status: 200, visible: dialog.open };
+    } catch (error) {
+      // A non-modal fallback keeps the settings testable.
+      dialog.setAttribute('open', '');
+      dialog.style.display = 'block';
+      dialog.style.position = 'fixed';
+      dialog.style.inset = '50% auto auto 50%';
+      dialog.style.transform = 'translate(-50%, -50%)';
+      dialog.style.zIndex = '2147483647';
+      hub.dispatch(
+        'HighlighterUI', 'SyntaxHighlight', 'DIALOG_FALLBACK',
+        { error: String(error) }
+      );
+      return { status: 500, result: 'FAIL', error: String(error) };
+    }
+  }
+  function close() {
+    const dialog = get('highlighterDialog');
+    if (!dialog) return;
+    if (dialog.matches(':modal')) dialog.close();
+    else {
+      dialog.removeAttribute('open');
+      dialog.style.display = '';
+      dialog.style.position = '';
+      dialog.style.inset = '';
+      dialog.style.transform = '';
+      dialog.style.zIndex = '';
+    }
   }
   function bind() {
     editor?.addEventListener('input', schedule);
@@ -73,7 +111,7 @@ export function createHighlighterUI({ hub, properties, root = document }) {
     get('highlighterBtn')?.addEventListener('click', open);
     for (const id of ['highlighterDone', 'highlighterClose']) {
       get(id)?.addEventListener('click', () => {
-        get('highlighterDialog')?.close();
+        close();
       });
     }
     const input = get('highlighterShortcutInput');
