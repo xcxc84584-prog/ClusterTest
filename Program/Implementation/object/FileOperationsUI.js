@@ -1,4 +1,5 @@
-// FileOperationsUI: edit byte windows and save full Blob without truncation.
+// FileOperationsUI: sparse AVL patch index and lossless Blob export.
+import { PatchTree } from 'ocda/patch-tree';
 export function createFileOperationsUI({
   hub, properties, root = document
 }) {
@@ -14,7 +15,7 @@ export function createFileOperationsUI({
   let onNew = () => {};
   let beforeNew = () => {};
   let onClose = () => {};
-  const patches = new Map();
+  const patches = new PatchTree();
 
   function emit(action, status = 200, detail = {}) {
     const result = status < 400 ? 'PASS' : 'FAIL';
@@ -152,8 +153,7 @@ export function createFileOperationsUI({
     if (!source) return new Blob([editor.value], {
       type: 'text/plain;charset=utf-8'
     });
-    const ordered = [...patches.values()]
-      .sort((a, b) => a.start - b.start);
+    const ordered = patches.values();
     const parts = [];
     let offset = 0;
     for (const patch of ordered) {
