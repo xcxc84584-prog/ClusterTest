@@ -5,15 +5,17 @@ import { createHighlighterUI } from 'ocda/highlighter-ui';
 import { createPaletteUI } from 'ocda/palette-ui';
 import { createChunkLoaderUI } from 'ocda/chunk-ui';
 import { createFileOperationsUI } from 'ocda/file-ui';
+import { createEditorViewportUI } from 'ocda/viewport-ui';
 
 const { URU, OMU, EDPMU, Hub } = LinkCore;
 const get = (id) => document.getElementById(id);
-for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI', 'ChunkLoaderUI', 'FileOperationsUI']) {
+for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI', 'ChunkLoaderUI', 'FileOperationsUI',
+  'EditorViewportUI']) {
   URU.register(name);
 }
 for (const name of [
   'Language', 'SyntaxHighlight', 'Version',
-  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading', 'FileState'
+  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading', 'FileState', 'VisibleLineRange'
 ]) {
   URU.register(name, 'Property');
 }
@@ -26,9 +28,17 @@ const palette = createPaletteUI({ hub: Hub, properties: EDPMU });
 const files = createFileOperationsUI({
   hub: Hub, properties: EDPMU
 });
+let viewport;
 const chunks = createChunkLoaderUI({
   hub: Hub, properties: EDPMU,
-  onLoaded: (data) => files.receive(data)
+  beforeNavigate: () => files.canNavigate(),
+  onLoaded: (data) => {
+    files.receive(data);
+    viewport?.receive(data);
+  }
+});
+viewport = createEditorViewportUI({
+  hub: Hub, properties: EDPMU, loader: chunks
 });
 
 function toggle(id, buttonId) {
@@ -53,13 +63,6 @@ document.querySelectorAll('[data-locale]').forEach((button) => {
     get('languageBtn').setAttribute('aria-expanded', 'false');
   });
 });
-get('editor')?.addEventListener('input', () => {
-  const count = get('editor').value.split('\n').length;
-  get('gutter').textContent = Array.from(
-    { length: Math.min(count, 5000) },
-    (_, index) => String(index + 1)
-  ).join('\n');
-});
 window.Cluster = Object.freeze({
   log: () => OMU.log(),
   objectlist: () => URU.list().filter((x) => x.kind === 'Object'),
@@ -79,7 +82,9 @@ window.Cluster = Object.freeze({
   fileState: () => files.getState(),
   newFile: () => files.newFile(),
   saveFile: () => files.save(),
-  closeFile: () => files.close()
+  closeFile: () => files.close(),
+  nextWindow: () => viewport.next(),
+  previousWindow: () => viewport.previous()
 });
 window.VTE = Object.freeze({
   log: () => OMU.log(),
