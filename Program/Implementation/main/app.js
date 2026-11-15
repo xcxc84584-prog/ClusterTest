@@ -48,6 +48,7 @@ files.setOnReset(() => chunks.reset());
 tabs = createFileTabsUI({
   hub: Hub, properties: EDPMU, files, loader: chunks
 });
+files.setBeforeNew(() => tabs.beforeOpen());
 files.setOnNew(() => tabs.addCurrent('untitled.txt'));
 files.setOnClose(() => tabs.closed());
 
