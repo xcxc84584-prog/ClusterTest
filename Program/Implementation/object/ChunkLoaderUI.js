@@ -2,7 +2,8 @@
 import { readWindow } from 'ocda/chunk-property';
 
 export function createChunkLoaderUI({
-  hub, properties, root = document, onLoaded, beforeNavigate
+  hub, properties, root = document, onLoaded, beforeNavigate,
+  beforeOpen
 }) {
   const get = (id) => root.getElementById(id);
   let file = null;
@@ -91,6 +92,7 @@ export function createChunkLoaderUI({
     if (!(nextFile instanceof Blob)) {
       return Promise.resolve({ status: 400, result: 'FAIL' });
     }
+    beforeOpen?.();
     file = nextFile;
     last = null;
     return navigate(0);
