@@ -40,3 +40,9 @@
 - Security: strict hex validation, no HTML injection, no keys, no remote palette calls.
 - Load: constant-time token update per change; no editor re-tokenization.
 - Risk: existing ClusterOpt CSS may contain hard-coded colors; browser contrast audit pending.
+
+## P8
+- Requirements: RGB 0/255 endpoints, basic chunk loading toggle and bounded preview.
+- Load: 64 KiB slices, maximum 1 MiB decoded preview; yields event loop between slices.
+- Security: no network upload, no unsafe HTML, no credentials; partial preview must not be saved as full file.
+- Risk: full-file virtual pagination, byte-offset indexing and browser E2E not yet implemented.
