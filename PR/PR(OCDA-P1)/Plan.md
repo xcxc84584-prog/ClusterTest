@@ -46,3 +46,9 @@
 - Load: 64 KiB slices, maximum 1 MiB decoded preview; yields event loop between slices.
 - Security: no network upload, no unsafe HTML, no credentials; partial preview must not be saved as full file.
 - Risk: full-file virtual pagination, byte-offset indexing and browser E2E not yet implemented.
+
+## P9 — File baseline
+- Requirement: always-on chunk loader, no Tool switch, new/open/save/save-as/close, partial preview save protection.
+- Load: 64 KiB chunks, 1 MiB preview; full virtual scrolling is a pending task.
+- Security: local-only file input, explicit browser download, prevent partial data loss.
+- Test plan: small file, large file, unsaved confirmation, save block 409, open/close, no startup sample.
