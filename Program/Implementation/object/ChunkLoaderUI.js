@@ -1,32 +1,13 @@
 // ChunkLoaderUI: user-selected files, bounded preview, cancel switch.
-import { readFileChunks, readFilePreviewSingle } from 'ocda/chunk-property';
+import { readFileChunks } from 'ocda/chunk-property';
 
 export function createChunkLoaderUI({
   hub, properties, root = document, onLoaded
 }) {
   const get = (id) => root.getElementById(id);
-  let enabled = true;
+  const enabled = true;
   let active = null;
   let last = null;
-
-  function setEnabled(value) {
-    const next = Boolean(value);
-    const event = hub.dispatch(
-      'ChunkLoaderUI', 'ChunkLoading', 'SET_ENABLED',
-      { enabled: next }
-    );
-    if (event.result !== 'PASS') return event;
-    enabled = next;
-    if (!enabled) active?.abort();
-    properties.set('ChunkLoading', enabled);
-    const button = get('chunkLoadingToggle');
-    if (button) {
-      button.textContent = enabled
-        ? '切片載入：開' : '切片載入：關';
-      button.setAttribute('aria-pressed', String(enabled));
-    }
-    return { status: 200, result: 'PASS', enabled };
-  }
 
   async function load(file) {
     if (!file) return { status: 400, result: 'FAIL' };
@@ -37,9 +18,9 @@ export function createChunkLoaderUI({
       { name: file.name, size: file.size });
     try {
       // Off uses one bounded read, never a multi-GiB allocation.
-      const result = enabled
-        ? await readFileChunks(file, null, controller.signal)
-        : await readFilePreviewSingle(file, controller.signal);
+      const result = await readFileChunks(
+        file, null, controller.signal
+      );
       if (controller !== active) return {
         status: 409, result: 'FAIL'
       };
@@ -58,9 +39,6 @@ export function createChunkLoaderUI({
     }
   }
 
-  get('chunkLoadingToggle')?.addEventListener('click', () => {
-    setEnabled(!enabled);
-  });
   get('fileInput')?.addEventListener('change', (event) => {
     const file = event.target.files?.[0];
     if (file) void load(file);
@@ -70,7 +48,7 @@ export function createChunkLoaderUI({
     ?.addEventListener('click', () => get('fileInput')?.click());
   properties.set('ChunkLoading', enabled);
   return {
-    load, setEnabled, cancel: () => active?.abort(),
+    load, cancel: () => active?.abort(),
     getState: () => ({ enabled, last: last && {
       name: last.name, bytesRead: last.bytesRead,
       totalBytes: last.totalBytes, complete: last.complete
