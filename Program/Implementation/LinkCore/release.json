@@ -1,6 +1,6 @@
 {
-  "version": "OCDA-P7",
-  "build": "ocda-p7-20261116-1",
+  "version": "OCDA-P8",
+  "build": "ocda-p8-20261116-1",
   "modules": {
     "ocda/app": "../main/app.js",
     "ocda/linkcore": "./core.js",
@@ -9,6 +9,8 @@
     "ocda/language-property": "../property/language.js",
     "ocda/highlighter-property": "../property/highlighter.js",
     "ocda/palette-ui": "../object/PaletteUI.js",
-    "ocda/palette-property": "../property/palette.js"
+    "ocda/palette-property": "../property/palette.js",
+    "ocda/chunk-ui": "../object/ChunkLoaderUI.js",
+    "ocda/chunk-property": "../property/chunkLoading.js"
   }
 }
