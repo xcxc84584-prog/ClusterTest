@@ -57,6 +57,7 @@ files.setBeforeNew(() => tabs.beforeOpen());
 files.setOnNew(() => tabs.addCurrent('untitled.txt'));
 files.setOnClose(() => tabs.closed());
 files.setOnSaved(async (savedFile) => {
+  tabs.updateSource(savedFile);
   chunks.attach(savedFile);
   await chunks.navigate(0);
 });
