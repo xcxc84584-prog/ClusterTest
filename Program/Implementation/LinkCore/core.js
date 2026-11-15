@@ -65,4 +65,29 @@ export const URU = new UnifiedRegistrationUnit();
 export const OMU = new ObjectManagementUnit();
 export const EDPMU = new EntireDomainPropertyManagementUnit();
 export const Hub = new HubUnit(URU, OMU);
-export const LinkCore = { URU, OMU, EDPMU, Hub };
+// Only LinkCore publishes the current application release.
+let publishedVersion = null;
+export const LinkCore = Object.freeze({
+  URU, OMU, EDPMU, Hub,
+  publishVersion() {
+    if (publishedVersion !== null) return publishedVersion;
+    const release = globalThis.__OCDA_RELEASE__;
+    if (!release || typeof release.version !== 'string') {
+      OMU.record({
+        type: 'EHU', source: 'LinkCore', target: 'Version',
+        action: 'VERSION_MISSING', result: 'FAIL', status: 500
+      });
+      throw new Error('LINKCORE_VERSION_MISSING');
+    }
+    URU.register('Version', 'Property');
+    publishedVersion = release.version;
+    EDPMU.set('Version', publishedVersion);
+    OMU.record({
+      type: 'Version', source: 'LinkCore', target: 'Version',
+      action: 'VERSION_PUBLISHED', result: 'PASS',
+      status: 200, version: publishedVersion
+    });
+    return publishedVersion;
+  },
+  version() { return publishedVersion; }
+});
