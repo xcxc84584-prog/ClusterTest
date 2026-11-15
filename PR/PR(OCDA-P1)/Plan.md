@@ -73,3 +73,8 @@
 - Requirements: no skipped byte ranges, per-tab viewport state, balanced sparse edit index.
 - Approach: exact byte offsets, fatal UTF-8 decoding, AVL PatchTree, tab snapshot/restore.
 - Complexity: patch insert/get O(log p), export iteration O(p), memory O(p) + active decoded window. Pending browser verification and full piece-tree implementation.
+
+## P14
+- Requirements: original-path overwrite, close control per tab, interactive Explorer search and selection.
+- API: File System Access showOpenFilePicker/createWritable; fallback input cannot overwrite original file.
+- Risk: secure context, permissions, unsupported browsers, write failure, tab consistency; browser tests pending.
