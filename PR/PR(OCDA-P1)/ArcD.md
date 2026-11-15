@@ -73,3 +73,9 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - Objects: existing ChunkLoaderUI and EditorViewportUI; properties ChunkLoading and VisibleLineRange.
 - Event chain: window navigate -> Hub -> ChunkLoaderUI -> Footer meter/status; input/scroll -> EditorViewportUI -> VisibleLineRange.
 - EHU: WINDOW_FAILED 409/500; tests pending for progress states, line offsets, scrollbar and export integrity.
+
+## P12 — Object and relation architecture
+- New object FileTabsUI; property OpenFileTabs.
+- Event chain: FileInput -> ChunkLoaderUI -> FileOperationsUI -> FileTabsUI -> HubUnit/OMU/EDPMU; Tab select -> FileTabsUI -> FileOperationsUI.restore.
+- EHU: tab ID missing 404 FAIL; loader WINDOW_FAILED 409/500; requested window progress UI uses busy/success/error.
+- Relation test cases: open A/B, edit A, switch B, return A, export A, close B, compare byte hash; pending execution.
