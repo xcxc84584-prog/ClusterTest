@@ -9,6 +9,7 @@ export function createFileOperationsUI({
   let current = null;
   let dirty = false;
   let loaded = false;
+  let programmatic = false;
   const patches = new Map();
 
   function emit(action, status = 200, detail = {}) {
@@ -42,9 +43,11 @@ export function createFileOperationsUI({
   function show(text) {
     get('editorPane').hidden = false;
     get('empty').hidden = true;
+    programmatic = true;
     editor.value = text;
     editor.scrollTop = 0;
     editor.dispatchEvent(new Event('input'));
+    programmatic = false;
   }
 
   function remember() {
@@ -161,7 +164,7 @@ export function createFileOperationsUI({
   }
 
   editor?.addEventListener('input', () => {
-    if (!loaded) return;
+    if (!loaded || programmatic) return;
     dirty = true;
     publish();
   });
