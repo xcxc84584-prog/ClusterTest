@@ -40,6 +40,7 @@ export function createFileOperationsUI({
     dirty = false;
     loaded = true;
     show(data.text);
+    dirty = false;
     setState(getState());
     return emit('OPEN_FILE', 200, {
       name, partial, bytesRead: data.bytesRead,
@@ -56,6 +57,7 @@ export function createFileOperationsUI({
     dirty = false;
     loaded = true;
     show('');
+    dirty = false;
     setState(getState());
     return emit('NEW_FILE');
   }
