@@ -9,15 +9,28 @@ export function createChunkLoaderUI({
   let active = null;
   let last = null;
 
-  function progress(loaded, total, label) {
+  function progress(loaded, total, label, phase = 'reading') {
     const percent = total ? Math.round(loaded / total * 100) : 100;
-    if (get('meterFill')) get('meterFill').style.width =
-      percent + '%';
+    const fill = get('meterFill');
+    if (fill) {
+      fill.style.width = percent + '%';
+      fill.dataset.phase = phase;
+      fill.style.backgroundColor = phase === 'error'
+        ? '#d75b5b' : phase === 'done' ? '#47a875' : '#d8ac50';
+    }
     if (get('meterPercent')) {
       get('meterPercent').hidden = false;
       get('meterPercent').textContent = percent + '%';
     }
     if (get('status')) get('status').textContent = label;
+    const meter = get('meterFill')?.parentElement;
+    if (meter) {
+      meter.setAttribute('role', 'progressbar');
+      meter.setAttribute('aria-valuemin', '0');
+      meter.setAttribute('aria-valuemax', '100');
+      meter.setAttribute('aria-valuenow', String(percent));
+      meter.setAttribute('aria-label', '文件讀取進度');
+    }
   }
 
   async function navigate(offset = 0) {
@@ -28,7 +41,7 @@ export function createChunkLoaderUI({
     active?.abort();
     const controller = new AbortController();
     active = controller;
-    progress(0, 1, '讀取切片中…');
+    progress(0, 100, '讀取切片中…');
     hub.dispatch('ChunkLoaderUI', 'ChunkLoading', 'WINDOW_START',
       { offset });
     try {
@@ -38,13 +51,15 @@ export function createChunkLoaderUI({
       }
       last = { name: file.name, file, ...window };
       onLoaded?.(last);
-      progress(window.byteEnd, file.size, '切片已載入');
+      progress(window.byteEnd, file.size,
+        '已定位 ' + window.byteEnd + ' / ' + file.size + ' bytes',
+        'done');
       hub.dispatch('ChunkLoaderUI', 'ChunkLoading', 'WINDOW_READY',
         { start: window.byteStart, end: window.byteEnd });
       return { status: 200, result: 'PASS', ...last };
     } catch (error) {
       const status = error.name === 'AbortError' ? 409 : 500;
-      progress(0, 1, '載入失敗');
+      progress(0, 100, '載入失敗', 'error');
       hub.omu.record({
         type: 'EHU', source: 'ChunkLoaderUI',
         target: 'ChunkLoading', action: 'WINDOW_FAILED',
@@ -60,7 +75,7 @@ export function createChunkLoaderUI({
     active?.abort();
     file = null;
     last = null;
-    progress(0, 1, '就緒');
+    progress(0, 100, '就緒', 'done');
   }
 
   function load(nextFile) {
