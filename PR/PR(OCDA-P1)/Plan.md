@@ -63,3 +63,8 @@
 - Requirement: original footer progress UI, loading phases, smooth visible line numbers and accurate caret position.
 - Load: requestAnimationFrame batching, visible gutter O(viewport lines); line counting remains O(window text) and requires future line index optimization.
 - Security: no new external requests or credentials. Risks: UI alignment and large-file behavior unverified.
+
+## P12 — Requested resources and file tabs
+- Requirements: requested-window progress, original yellow/green/red status, Explorer and file tabs, per-tab dirty patch retention.
+- Load: O(1 MiB) active window; each tab stores sparse patch map; memory scales with edited windows.
+- Risks: incomplete directory explorer, lack of browser test, dirty tab lifecycle and large-file stress unverified.
