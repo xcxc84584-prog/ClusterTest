@@ -7,6 +7,8 @@ export function createFileTabsUI({
   let nextId = 1;
   const strip = root.getElementById('tabs');
   const tree = root.getElementById('explorerTree');
+  const search = root.getElementById('explorerSearch');
+  if (search) search.readOnly = false;
 
   function saveActive() {
     if (activeId && tabs.has(activeId)) {
@@ -28,13 +30,26 @@ export function createFileTabsUI({
       button.dataset.active = String(id === activeId);
       button.setAttribute('aria-selected', String(id === activeId));
       button.addEventListener('click', () => select(id));
-      strip?.append(button);
+      const closeButton = root.createElement('button');
+      closeButton.type = 'button';
+      closeButton.className = 'tab-close';
+      closeButton.textContent = '×';
+      closeButton.setAttribute('aria-label', '關閉 ' + tab.name);
+      closeButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeTab(id);
+      });
+      const wrapper = root.createElement('span');
+      wrapper.className = 'tab-wrapper';
+      wrapper.append(button, closeButton);
+      strip?.append(wrapper);
       const item = root.createElement('button');
       item.type = 'button';
       item.textContent = tab.name;
       item.className = 'explorer-file';
       item.addEventListener('click', () => select(id));
-      tree?.append(item);
+      if (!search?.value || tab.name.toLowerCase()
+        .includes(search.value.toLowerCase())) tree?.append(item);
     }
     properties.set('OpenFileTabs', {
       activeId, count: tabs.size
@@ -85,6 +100,23 @@ export function createFileTabsUI({
     return { status: 200, result: 'PASS' };
   }
 
+  function closeTab(id) {
+    if (!tabs.has(id)) return { status: 404, result: 'FAIL' };
+    if (id !== activeId) {
+      const tab = tabs.get(id);
+      if (tab.session.dirty &&
+          !confirm('此文件尚未儲存，確定關閉？')) {
+        return { status: 409, result: 'FAIL' };
+      }
+      tabs.delete(id);
+      hub.dispatch('FileTabsUI', 'OpenFileTabs',
+        'TAB_CLOSED', { id });
+      render();
+      return { status: 200, result: 'PASS' };
+    }
+    return files.close();
+  }
+
   function closed() {
     if (activeId) tabs.delete(activeId);
     activeId = null;
@@ -101,11 +133,13 @@ export function createFileTabsUI({
     render();
   }
 
+  search?.addEventListener('input', render);
   root.getElementById('editor')?.addEventListener('input', () => {
     if (activeId) queueMicrotask(refresh);
   });
   return {
     addCurrent, beforeOpen, opened, select, refresh, closed,
+    closeTab,
     list: () => [...tabs].map(([id, tab]) => ({
       id, name: tab.name, active: id === activeId
     }))
