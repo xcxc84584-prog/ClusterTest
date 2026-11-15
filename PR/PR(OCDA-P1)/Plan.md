@@ -52,3 +52,9 @@
 - Load: 64 KiB chunks, 1 MiB preview; full virtual scrolling is a pending task.
 - Security: local-only file input, explicit browser download, prevent partial data loss.
 - Test plan: small file, large file, unsaved confirmation, save block 409, open/close, no startup sample.
+
+## P10 — Full-file window navigation
+- Requirement: original status bar progress, full-file export preserving unmodified bytes, editable windows, scrolling between windows, visible line numbers.
+- Algorithm: newline-aligned byte windows (1 MiB), immutable source Blob slices plus sparse edited window patches, sorted assembly at export.
+- Load: O(window size) decoding and O(visible lines) gutter rendering; exported Blob references original slices without full source string allocation.
+- Risks: non-UTF8, giant lines, overlap conflicts, browser Blob limits and scroll alignment; full browser test pending.
