@@ -32,3 +32,7 @@ flowchart TD
 
 ## Relationship tests
 Browser PASS/FAIL and dependency matrix validation are pending.
+
+## P3 update
+- Version synchronized to OCDA-P3 across bootstrap and HTML.
+- Menu state and editor fallback improved; browser E2E pending.
