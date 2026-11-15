@@ -10,3 +10,9 @@
 | RT-006 | HubUnit ↔ Authorization | Access enforcement | Pending implementation |
 
 Status is not PASS until the test runner executes successfully.
+
+| RT-007 | Locale switch zh-Hant ↔ en | UI updates, persisted | Test defined |
+| RT-008 | Register third locale | Fallback + dynamic keys | Test defined |
+| RT-009 | File extension → syntax grammar | Known mapping/plain fallback | Test defined |
+| RT-010 | Highlight CDN failure | Editor remains usable | Browser test pending |
+| RT-011 | Stale async highlight result | Old result discarded | Browser test pending |
