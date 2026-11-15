@@ -55,3 +55,9 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - Event chain: Open -> FileInput -> ChunkLoaderUI.load -> Hub -> Chunk Property -> EditorUI; Palette endpoint -> Hub -> UIPalette -> CSS tokens.
 - EHU cases: invalid file 400, cancellation 409, read failure 500; current failure logging is incomplete.
 - Relation tests: toggle, dark 0, light 255, small file, >1 MiB file, cancellation, persistence; browser execution pending.
+
+## P9 — Objects and EHU
+- Object: FileOperationsUI; Property: FileState; default ChunkLoading always on.
+- Event chain: Menu -> FileOperationsUI -> Hub -> OMU/EDPMU; Open -> ChunkLoaderUI -> ChunkLoading -> FileOperationsUI.
+- Error cases: SAVE_NO_FILE 400; SAVE_PARTIAL_BLOCKED 409; CLOSE_CANCELLED 409; loader failure 500.
+- Relation test: request PASS/FAIL and log records; browser verification pending.
