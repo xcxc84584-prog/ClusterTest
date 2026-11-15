@@ -63,11 +63,9 @@ export async function readWindow(file, requestedOffset, signal) {
   if (signal?.aborted) throw new DOMException(
     'Cancelled', 'AbortError'
   );
-  let start = startHint === 0 ? 0 : startHint - scanStart;
-  if (startHint !== 0) {
-    // Search forward for a newline. Byte offsets stay UTF-8 safe.
-    while (start < bytes.length && bytes[start - 1] !== 10) start++;
-  }
+  // A byte offset returned by the previous window is already aligned.
+  // Never skip forward here: doing so would silently drop file content.
+  const start = startHint - scanStart;
   let end = Math.min(bytes.length, start + PREVIEW_BYTES);
   if (scanStart + end < total) {
     while (end > start && bytes[end - 1] !== 10) end--;
@@ -75,8 +73,12 @@ export async function readWindow(file, requestedOffset, signal) {
   }
   const byteStart = scanStart + start;
   const byteEnd = scanStart + end;
+  if (byteEnd <= byteStart && byteStart < total) {
+    throw new Error('EMPTY_WINDOW');
+  }
   return {
-    text: new TextDecoder('utf-8').decode(bytes.subarray(start, end)),
+    text: new TextDecoder('utf-8', { fatal: true })
+      .decode(bytes.subarray(start, end)),
     byteStart, byteEnd, totalBytes: total,
     complete: byteStart === 0 && byteEnd === total
   };
