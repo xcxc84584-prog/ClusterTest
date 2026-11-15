@@ -11,6 +11,8 @@ export function createFileOperationsUI({
   let loaded = false;
   let programmatic = false;
   let onReset = () => {};
+  let onNew = () => {};
+  let onClose = () => {};
   const patches = new Map();
 
   function emit(action, status = 200, detail = {}) {
@@ -122,6 +124,7 @@ export function createFileOperationsUI({
     loaded = true;
     show('');
     publish();
+    onNew();
     return emit('NEW_FILE');
   }
 
@@ -138,6 +141,7 @@ export function createFileOperationsUI({
     get('editorPane').hidden = true;
     get('empty').hidden = false;
     publish();
+    onClose();
     return emit('CLOSE_FILE');
   }
 
@@ -215,6 +219,8 @@ export function createFileOperationsUI({
   return {
     receive, newFile, close, save, getState, canNavigate,
     snapshot, restore,
-    setOnReset: (callback) => { onReset = callback; }
+    setOnReset: (callback) => { onReset = callback; },
+    setOnNew: (callback) => { onNew = callback; },
+    setOnClose: (callback) => { onClose = callback; }
   };
 }
