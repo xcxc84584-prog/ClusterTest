@@ -48,7 +48,17 @@ export class EditorHighlighterView {
           for (const child of node.childNodes) append(child, span);
           parent.append(span);
         };
-        for (const child of code.childNodes) append(child, fragment);
+        const lines = code.querySelectorAll(':scope > .line');
+        if (lines.length) {
+          lines.forEach((line, index) => {
+            for (const child of line.childNodes) append(child, fragment);
+            if (index < lines.length - 1) {
+              fragment.append(document.createTextNode('\n'));
+            }
+          });
+        } else {
+          for (const child of code.childNodes) append(child, fragment);
+        }
         this.overlay.replaceChildren(fragment);
         this.overlay.scrollTop = this.editor.scrollTop;
         this.overlay.scrollLeft = this.editor.scrollLeft;
