@@ -46,7 +46,8 @@ viewport = createEditorViewportUI({
 });
 files.setOnReset(() => chunks.reset());
 tabs = createFileTabsUI({
-  hub: Hub, properties: EDPMU, files, loader: chunks
+  hub: Hub, properties: EDPMU, files,
+  loader: chunks, viewport
 });
 files.setBeforeNew(() => tabs.beforeOpen());
 files.setOnNew(() => tabs.addCurrent('untitled.txt'));
