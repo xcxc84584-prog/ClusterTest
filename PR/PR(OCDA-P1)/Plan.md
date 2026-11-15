@@ -68,3 +68,8 @@
 - Requirements: requested-window progress, original yellow/green/red status, Explorer and file tabs, per-tab dirty patch retention.
 - Load: O(1 MiB) active window; each tab stores sparse patch map; memory scales with edited windows.
 - Risks: incomplete directory explorer, lack of browser test, dirty tab lifecycle and large-file stress unverified.
+
+## P13
+- Requirements: no skipped byte ranges, per-tab viewport state, balanced sparse edit index.
+- Approach: exact byte offsets, fatal UTF-8 decoding, AVL PatchTree, tab snapshot/restore.
+- Complexity: patch insert/get O(log p), export iteration O(p), memory O(p) + active decoded window. Pending browser verification and full piece-tree implementation.
