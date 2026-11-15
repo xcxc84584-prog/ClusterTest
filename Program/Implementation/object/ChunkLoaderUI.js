@@ -1,5 +1,5 @@
 // ChunkLoaderUI: user-selected files, bounded preview, cancel switch.
-import { readFileChunks } from 'ocda/chunk-property';
+import { readFileChunks, readFilePreviewSingle } from 'ocda/chunk-property';
 
 export function createChunkLoaderUI({
   hub, properties, root = document, onLoaded
@@ -39,7 +39,7 @@ export function createChunkLoaderUI({
       // Off uses one bounded read, never a multi-GiB allocation.
       const result = enabled
         ? await readFileChunks(file, null, controller.signal)
-        : await readFileChunks(file, null, controller.signal);
+        : await readFilePreviewSingle(file, controller.signal);
       if (controller !== active) return {
         status: 409, result: 'FAIL'
       };
