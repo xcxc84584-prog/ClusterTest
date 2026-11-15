@@ -5,6 +5,11 @@ import { HubUnit } from './LinkCore/HubUnit.js';
 import { FileLoader } from './Objects/FileLoader.js';
 import { FileSession } from './Objects/FileSession.js';
 import { Document } from './Objects/Document.js';
+import { LanguageProperty } from './Properties/LanguageProperty.js';
+import zhHant from './Locales/zh-Hant.js';
+import english from './Locales/en.js';
+import { SyntaxHighlighter } from './Objects/SyntaxHighlighter.js';
+import { EditorHighlighterView } from './Objects/EditorHighlighterView.js';
 
 const registry = new UnifiedRegistrationUnit();
 const omu = new ObjectManagementUnit();
@@ -13,6 +18,21 @@ const hub = new HubUnit(registry, omu);
 const sessions = new FileSession(new FileLoader());
 registry.register('FileSession', sessions);
 properties.define('Version', '0.0.1');
+const language = new LanguageProperty({
+  'zh-Hant': zhHant, en: english
+});
+const highlighter = new EditorHighlighterView(
+  document.getElementById('editor'),
+  document.getElementById('highlightOverlay'),
+  new SyntaxHighlighter(),
+  state => {
+    const label = document.getElementById('highlighterState');
+    if (label) label.textContent = language.t('highlight.state.' + state);
+  }
+);
+const savedLocale = localStorage.getItem('cluster.locale');
+if (savedLocale) language.setLocale(savedLocale);
+
 
 const docs = [];
 let current = null;
@@ -64,6 +84,7 @@ function show(doc) {
   $('fileType').textContent = doc.name.split('.').at(-1) || '純文字';
   renderTabs();
   position();
+  highlighter.schedule(doc.name);
 }
 function create() {
   const doc = new Document({
@@ -103,6 +124,7 @@ function close(all = false) {
   if (all) docs.splice(0);
   else docs.splice(docs.indexOf(current), 1);
   show(docs.at(-1) || null);
+  if (!current) highlighter.dispose();
 }
 $('menuBtn').addEventListener('click', () => { menu.hidden = !menu.hidden; });
 menu.querySelectorAll('[data-action]').forEach(button => {
@@ -145,11 +167,13 @@ editor.addEventListener('input', () => {
   $('status').textContent = '未儲存';
   renderTabs();
   position();
+  highlighter.schedule(current.name);
 });
 editor.addEventListener('click', position);
 editor.addEventListener('keyup', position);
 editor.addEventListener('scroll', () => {
   $('gutter').scrollTop = editor.scrollTop;
+  highlighter.scroll();
 });
 $('goLineButton').addEventListener('click', () => {
   const line = Math.max(1, Number($('goLineInput').value) || 1);
@@ -161,10 +185,90 @@ $('goLineButton').addEventListener('click', () => {
   editor.setSelectionRange(offset, offset);
   position();
 });
+
+const localeBindings = [
+  ['menuBtn', 'menu.file'],
+  ['[data-action="new"]', 'menu.new'],
+  ['[data-action="open"]', 'menu.open'],
+  ['[data-action="save"]', 'menu.save'],
+  ['[data-action="saveas"]', 'menu.saveas'],
+  ['[data-action="close"]', 'menu.close'],
+  ['[data-action="closeall"]', 'menu.closeall'],
+  ['toolBtn', 'menu.tools'],
+  ['languageBtn', 'menu.language'],
+  ['highlighterBtn', 'menu.highlighter'],
+  ['paletteBtn', 'menu.palette'],
+  ['explorerTitle', 'explorer.title'],
+  ['explorerAddFolder', 'explorer.folder'],
+  ['explorerAddFile', 'explorer.file'],
+  ['highlighterTitle', 'highlight.title'],
+  ['highlighterDone', 'highlight.done'],
+  ['highlighterClose', 'highlight.close'],
+  ['highlighterHint', 'highlight.hint'],
+  ['highlighterSlices', 'highlight.slices'],
+  ['highlighterPerformanceLabel', 'highlight.performance'],
+  ['goLineButton', 'line.goto']
+];
+function applyLocale() {
+  document.documentElement.lang = language.locale;
+  for (const [selector, key] of localeBindings) {
+    const node = selector.startsWith('[')
+      ? document.querySelector(selector) : $(selector);
+    if (node) node.textContent = language.t(key);
+  }
+  const search = $('explorerSearch');
+  if (search) search.placeholder = language.t('explorer.search');
+  const emptyHint = $('empty')?.querySelector('p');
+  if (emptyHint) emptyHint.textContent = language.t('empty.hint');
+  const lineLabel = document.querySelector('label[for="goLineInput"]');
+  if (lineLabel) lineLabel.textContent = language.t('line.label');
+  const lineHint = document.querySelector('.goLineHint');
+  if (lineHint) lineHint.textContent = language.t('line.hint');
+  const switchLabel = $('highlighterEnabled')?.parentElement;
+  if (switchLabel) {
+    const input = $('highlighterEnabled');
+    switchLabel.replaceChildren(input,
+      document.createTextNode(' ' + language.t('highlight.enabled')));
+  }
+  const localeButtons = document.querySelectorAll('[data-locale]');
+  for (const button of localeButtons) {
+    button.setAttribute('aria-pressed',
+      String(button.dataset.locale === language.locale));
+  }
+}
+language.subscribe(applyLocale);
+document.querySelectorAll('[data-locale]').forEach(button => {
+  button.addEventListener('click', () => {
+    if (language.setLocale(button.dataset.locale)) {
+      localStorage.setItem('cluster.locale', language.locale);
+      $('languageOptions').hidden = true;
+    }
+  });
+});
+$('highlighterBtn')?.addEventListener('click', () => {
+  $('highlighterDialog')?.showModal();
+});
+$('highlighterClose')?.addEventListener('click', () => {
+  $('highlighterDialog')?.close();
+});
+$('highlighterDone')?.addEventListener('click', () => {
+  $('highlighterDialog')?.close();
+});
+$('highlighterEnabled')?.addEventListener('change', event => {
+  highlighter.enabled = event.target.checked;
+  highlighter.schedule(current?.name);
+});
+$('highlighterPerformance')?.addEventListener('change', event => {
+  highlighter.performance = event.target.checked;
+  highlighter.schedule(current?.name);
+});
+applyLocale();
 window.Cluster = Object.freeze({
   log: () => omu.log(),
   objectlist: () => registry.list(),
   propertylist: () => properties.list(),
-  version: () => properties.read('Version').data.value
+  version: () => properties.read('Version').data.value,
+  locale: () => language.locale,
+  locales: () => language.available()
 });
 show(null);
