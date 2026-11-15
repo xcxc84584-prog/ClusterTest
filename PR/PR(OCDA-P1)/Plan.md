@@ -1,18 +1,25 @@
-# Plan — OCDA-P1
+# Plan — OCDA P1 → P2
 
-## Scope
-- Reuse original ClusterOpt HTML/CSS without redesign.
-- Build isolated LinkCore units and runtime registration.
-- Make Language UI and Highlighter UI interactive for testing.
+## Requirements and examples
+- Original ClusterOpt v0.0.69 HTML/CSS preserved.
+- LanguageUI: zh-Hant/en toggles in original File > Tools menu.
+- HighlighterUI: open original dialog; toggle syntax coloring.
+- Console: Cluster.log(), Cluster.objectlist(), VTE.A().
 
-## Reference
-- Source: xcxc84584-prog/ClusterOpt, v0.0.69.
-- GitHub Pages static ES modules; no secrets or absolute paths.
+## Knowledge and references
+- Original ClusterOpt implementation, VS Code editor architecture concepts.
+- Browser requestAnimationFrame for coalesced paint work.
 
-## Load
-- In-memory logs: O(number of events); tokenizer: O(visible text length).
-- Current demo has no gigabyte-file guarantees.
+## Security
+- No absolute filesystem paths or embedded API keys.
+- Runtime registry clears on reload. Untrusted text is HTML-escaped.
+- No external HTTP log endpoint is configured.
 
-## Known risks
-- Original markup contains controls outside this patch's scope.
-- CSS copied from upstream, pending visual regression test.
+## Performance and load
+- Preview currently processes up to 128 KiB, O(n) per frame.
+- Large files and full editor parity are out of scope.
+- No claims of gigabyte editing or true visible-range virtualization.
+
+## Patch status
+- +1: initial skeleton.
+- +2: modular UI adapters and rendering scheduler.
