@@ -10,6 +10,7 @@ export function createFileOperationsUI({
   let dirty = false;
   let loaded = false;
   let programmatic = false;
+  let onReset = () => {};
   const patches = new Map();
 
   function emit(action, status = 200, detail = {}) {
@@ -85,6 +86,7 @@ export function createFileOperationsUI({
     if (dirty && !confirm('未儲存的變更將遺失，確定繼續？')) {
       return emit('NEW_CANCELLED', 409);
     }
+    onReset();
     source = null;
     current = null;
     patches.clear();
@@ -184,6 +186,7 @@ export function createFileOperationsUI({
   }
   publish();
   return {
-    receive, newFile, close, save, getState, canNavigate
+    receive, newFile, close, save, getState, canNavigate,
+    setOnReset: (callback) => { onReset = callback; }
   };
 }
