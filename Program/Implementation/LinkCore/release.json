@@ -1,6 +1,6 @@
 {
-  "version": "OCDA-P10",
-  "build": "ocda-p10-20261116-1",
+  "version": "OCDA-P11",
+  "build": "ocda-p11-20261116-1",
   "modules": {
     "ocda/app": "../main/app.js",
     "ocda/linkcore": "./core.js",
