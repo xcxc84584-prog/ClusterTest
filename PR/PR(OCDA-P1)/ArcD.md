@@ -49,3 +49,9 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - Abstract: PaletteUI -> HubUnit -> {URU,OMU,EDPMU} -> UIPalette -> DOM style.
 - EHU: invalid input 400, missing dialog 404, dialog exception 500, persistence error STORAGE_FAILED.
 - Relation tests: open/close, invalid hex, RGB input, mode switching, reload persistence and log records; browser tests pending.
+
+## P8
+- Objects: ChunkLoaderUI; Property: ChunkLoading and 64 KiB chunk algorithm.
+- Event chain: Open -> FileInput -> ChunkLoaderUI.load -> Hub -> Chunk Property -> EditorUI; Palette endpoint -> Hub -> UIPalette -> CSS tokens.
+- EHU cases: invalid file 400, cancellation 409, read failure 500; current failure logging is incomplete.
+- Relation tests: toggle, dark 0, light 255, small file, >1 MiB file, cancellation, persistence; browser execution pending.
