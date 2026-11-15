@@ -82,6 +82,33 @@ export function createFileOperationsUI({
     return emit('OPEN_WINDOW', 200, { ...current });
   }
 
+  function snapshot() {
+    remember();
+    return {
+      name, source, current: current && { ...current },
+      dirty, loaded, text: editor.value,
+      patches: [...patches.entries()]
+    };
+  }
+
+  function restore(state) {
+    source = state.source;
+    current = state.current && { ...state.current };
+    name = state.name;
+    dirty = state.dirty;
+    loaded = state.loaded;
+    patches.clear();
+    for (const [key, value] of state.patches) {
+      patches.set(key, value);
+    }
+    if (loaded) show(state.text);
+    else {
+      get('editorPane').hidden = true;
+      get('empty').hidden = false;
+    }
+    publish();
+  }
+
   function newFile() {
     if (dirty && !confirm('未儲存的變更將遺失，確定繼續？')) {
       return emit('NEW_CANCELLED', 409);
@@ -187,6 +214,7 @@ export function createFileOperationsUI({
   publish();
   return {
     receive, newFile, close, save, getState, canNavigate,
+    snapshot, restore,
     setOnReset: (callback) => { onReset = callback; }
   };
 }
