@@ -1,6 +1,6 @@
 {
-  "version": "OCDA-P11",
-  "build": "ocda-p11-20261116-1",
+  "version": "OCDA-P12",
+  "build": "ocda-p12-20261116-1",
   "modules": {
     "ocda/app": "../main/app.js",
     "ocda/linkcore": "./core.js",
@@ -13,6 +13,7 @@
     "ocda/chunk-ui": "../object/ChunkLoaderUI.js",
     "ocda/chunk-property": "../property/chunkLoading.js",
     "ocda/file-ui": "../object/FileOperationsUI.js",
-    "ocda/viewport-ui": "../object/EditorViewportUI.js"
+    "ocda/viewport-ui": "../object/EditorViewportUI.js",
+    "ocda/tabs-ui": "../object/FileTabsUI.js"
   }
 }
