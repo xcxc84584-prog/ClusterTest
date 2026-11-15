@@ -40,6 +40,7 @@ const chunks = createChunkLoaderUI({
 viewport = createEditorViewportUI({
   hub: Hub, properties: EDPMU, loader: chunks
 });
+files.setOnReset(() => chunks.reset());
 
 function toggle(id, buttonId) {
   const node = get(id);
