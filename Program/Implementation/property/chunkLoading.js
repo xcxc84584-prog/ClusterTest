@@ -44,3 +44,42 @@ export async function readFilePreviewSingle(file, signal) {
     complete: limit === file.size
   };
 }
+
+// Windowed reading: align to newline bytes so edits can replace exact ranges.
+// A window is at most 1 MiB plus boundary scan (64 KiB).
+export async function readWindow(file, requestedOffset, signal) {
+  if (!(file instanceof Blob)) throw new TypeError('INVALID_FILE');
+  const total = file.size;
+  const startHint = Math.max(0, Math.min(total, requestedOffset));
+  const scanStart = Math.max(0, startHint - CHUNK_BYTES);
+  const scanEnd = Math.min(total, startHint + PREVIEW_BYTES +
+    CHUNK_BYTES);
+  if (signal?.aborted) throw new DOMException(
+    'Cancelled', 'AbortError'
+  );
+  const bytes = new Uint8Array(
+    await file.slice(scanStart, scanEnd).arrayBuffer()
+  );
+  if (signal?.aborted) throw new DOMException(
+    'Cancelled', 'AbortError'
+  );
+  let start = startHint === 0 ? 0 : startHint - scanStart;
+  if (startHint !== 0) {
+    // Search forward for a newline. Byte offsets stay UTF-8 safe.
+    while (start < bytes.length && bytes[start - 1] !== 10) start++;
+  }
+  let end = Math.min(bytes.length, start + PREVIEW_BYTES);
+  if (scanStart + end < total) {
+    while (end > start && bytes[end - 1] !== 10) end--;
+    if (end === start) end = Math.min(
+      bytes.length, start + PREVIEW_BYTES
+    );
+  }
+  const byteStart = scanStart + start;
+  const byteEnd = scanStart + end;
+  return {
+    text: new TextDecoder('utf-8').decode(bytes.subarray(start, end)),
+    byteStart, byteEnd, totalBytes: total,
+    complete: byteStart === 0 && byteEnd === total
+  };
+}
