@@ -11,11 +11,15 @@ export function createEditorViewportUI({
   let windowEnd = 0;
   let totalBytes = 0;
   let busy = false;
+  let scheduled = false;
 
   function render() {
     if (!editor || !gutter) return;
     const text = editor.value;
-    const lineCount = text.split('\n').length;
+    let lineCount = 1;
+    for (let i = 0; i < text.length; i++) {
+      if (text.charCodeAt(i) === 10) lineCount++;
+    }
     const style = getComputedStyle(editor);
     const lineHeight = Number.parseFloat(style.lineHeight) ||
       Number.parseFloat(style.fontSize) * 1.5 || 20;
@@ -33,15 +37,30 @@ export function createEditorViewportUI({
     if (get('position')) {
       const caret = editor.selectionStart;
       const prefix = text.slice(0, caret);
-      const localLine = prefix.split('\n').length;
-      const column = prefix.length -
-        prefix.lastIndexOf('\n');
+      let localLine = 1;
+      let lastBreak = -1;
+      for (let i = 0; i < prefix.length; i++) {
+        if (prefix.charCodeAt(i) === 10) {
+          localLine++;
+          lastBreak = i;
+        }
+      }
+      const column = prefix.length - lastBreak;
       get('position').textContent =
         'Ln ' + (startLine + localLine - 1) +
         ', Col ' + column;
     }
     properties.set('VisibleLineRange', {
       first: startLine + first, last: startLine + end - 1
+    });
+  }
+
+  function schedule() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      render();
     });
   }
 
@@ -53,7 +72,7 @@ export function createEditorViewportUI({
     windowStart = data.byteStart;
     windowEnd = data.byteEnd;
     totalBytes = data.totalBytes;
-    render();
+    schedule();
   }
 
   async function next() {
@@ -66,7 +85,11 @@ export function createEditorViewportUI({
     const result = await loader.navigate(oldEnd);
     if (result.status === 200 && result.byteStart > oldStart) {
       history.push({ offset: oldStart, line: oldLine });
-      startLine = oldLine + oldText.split('\n').length - 1;
+      let lines = 0;
+      for (let i = 0; i < oldText.length; i++) {
+        if (oldText.charCodeAt(i) === 10) lines++;
+      }
+      startLine = oldLine + lines;
       render();
     }
     busy = false;
@@ -85,10 +108,10 @@ export function createEditorViewportUI({
     busy = false;
   }
 
-  editor?.addEventListener('input', render);
-  editor?.addEventListener('click', render);
-  editor?.addEventListener('keyup', render);
-  editor?.addEventListener('scroll', render, { passive: true });
+  editor?.addEventListener('input', schedule);
+  editor?.addEventListener('click', schedule);
+  editor?.addEventListener('keyup', schedule);
+  editor?.addEventListener('scroll', schedule, { passive: true });
   editor?.addEventListener('wheel', (event) => {
     if (event.deltaY > 0 &&
         editor.scrollTop + editor.clientHeight >=
