@@ -1,0 +1,12 @@
+{
+  "version": "OCDA-P6",
+  "build": "ocda-p6-20261116-1",
+  "modules": {
+    "ocda/app": "../main/app.js",
+    "ocda/linkcore": "./core.js",
+    "ocda/language-ui": "../object/LanguageUI.js",
+    "ocda/highlighter-ui": "../object/HighlighterUI.js",
+    "ocda/language-property": "../property/language.js",
+    "ocda/highlighter-property": "../property/highlighter.js"
+  }
+}
