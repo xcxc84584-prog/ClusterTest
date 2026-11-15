@@ -81,6 +81,12 @@ export function createChunkLoaderUI({
     progress(0, 100, '就緒', 'done');
   }
 
+  function attach(nextFile, window = null) {
+    active?.abort();
+    file = nextFile;
+    last = window;
+  }
+
   function load(nextFile) {
     if (!(nextFile instanceof Blob)) {
       return Promise.resolve({ status: 400, result: 'FAIL' });
@@ -100,7 +106,8 @@ export function createChunkLoaderUI({
 
   properties.set('ChunkLoading', true);
   return {
-    load, navigate, reset, cancel: () => active?.abort(),
+    load, navigate, reset, attach,
+    cancel: () => active?.abort(),
     getState: () => ({
       enabled: true,
       last: last && {
