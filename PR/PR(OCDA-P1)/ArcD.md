@@ -79,3 +79,8 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 - Event chain: FileInput -> ChunkLoaderUI -> FileOperationsUI -> FileTabsUI -> HubUnit/OMU/EDPMU; Tab select -> FileTabsUI -> FileOperationsUI.restore.
 - EHU: tab ID missing 404 FAIL; loader WINDOW_FAILED 409/500; requested window progress UI uses busy/success/error.
 - Relation test cases: open A/B, edit A, switch B, return A, export A, close B, compare byte hash; pending execution.
+
+## P13
+- New property PatchTree; FileOperationsUI uses AVL tree rather than Map.
+- Event chain: FileOperationsUI.remember -> PatchTree.set -> assemble -> Blob; FileTabsUI.select -> EditorViewportUI.restore.
+- EHU: invalid UTF-8 and long lines -> WINDOW_FAILED 500. Relation test pending for no-gap window traversal and tab history isolation.
