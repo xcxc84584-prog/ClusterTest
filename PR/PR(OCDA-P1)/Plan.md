@@ -58,3 +58,8 @@
 - Algorithm: newline-aligned byte windows (1 MiB), immutable source Blob slices plus sparse edited window patches, sorted assembly at export.
 - Load: O(window size) decoding and O(visible lines) gutter rendering; exported Blob references original slices without full source string allocation.
 - Risks: non-UTF8, giant lines, overlap conflicts, browser Blob limits and scroll alignment; full browser test pending.
+
+## P11
+- Requirement: original footer progress UI, loading phases, smooth visible line numbers and accurate caret position.
+- Load: requestAnimationFrame batching, visible gutter O(viewport lines); line counting remains O(window text) and requires future line index optimization.
+- Security: no new external requests or credentials. Risks: UI alignment and large-file behavior unverified.
