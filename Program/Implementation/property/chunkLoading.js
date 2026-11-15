@@ -28,3 +28,19 @@ export async function readFileChunks(file, onProgress, signal) {
     complete: offset === file.size
   };
 }
+
+export async function readFilePreviewSingle(file, signal) {
+  if (!(file instanceof Blob)) throw new TypeError('INVALID_FILE');
+  if (signal?.aborted) throw new DOMException(
+    'Loading cancelled', 'AbortError'
+  );
+  const limit = Math.min(file.size, PREVIEW_BYTES);
+  const text = await file.slice(0, limit).text();
+  if (signal?.aborted) throw new DOMException(
+    'Loading cancelled', 'AbortError'
+  );
+  return {
+    text, bytesRead: limit, totalBytes: file.size,
+    complete: limit === file.size
+  };
+}
