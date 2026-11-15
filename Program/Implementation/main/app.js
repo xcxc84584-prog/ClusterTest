@@ -49,7 +49,7 @@ tabs = createFileTabsUI({
   hub: Hub, properties: EDPMU, files, loader: chunks
 });
 files.setOnNew(() => tabs.addCurrent('untitled.txt'));
-files.setOnClose(() => tabs.refresh());
+files.setOnClose(() => tabs.closed());
 
 function toggle(id, buttonId) {
   const node = get(id);
