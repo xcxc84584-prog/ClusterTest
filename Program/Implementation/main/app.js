@@ -3,15 +3,16 @@ import { LinkCore } from 'ocda/linkcore';
 import { createLanguageUI } from 'ocda/language-ui';
 import { createHighlighterUI } from 'ocda/highlighter-ui';
 import { createPaletteUI } from 'ocda/palette-ui';
+import { createChunkLoaderUI } from 'ocda/chunk-ui';
 
 const { URU, OMU, EDPMU, Hub } = LinkCore;
 const get = (id) => document.getElementById(id);
-for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI']) {
+for (const name of ['LanguageUI', 'HighlighterUI', 'EditorUI', 'PaletteUI', 'ChunkLoaderUI']) {
   URU.register(name);
 }
 for (const name of [
   'Language', 'SyntaxHighlight', 'Version',
-  'HighlightShortcut', 'HighlightPerformance', 'UIPalette'
+  'HighlightShortcut', 'HighlightPerformance', 'UIPalette', 'ChunkLoading'
 ]) {
   URU.register(name, 'Property');
 }
@@ -21,6 +22,22 @@ const highlighter = createHighlighterUI({
   hub: Hub, properties: EDPMU
 });
 const palette = createPaletteUI({ hub: Hub, properties: EDPMU });
+const chunks = createChunkLoaderUI({
+  hub: Hub, properties: EDPMU,
+  onLoaded: ({ text, name, complete, bytesRead, totalBytes }) => {
+    get('editorPane').hidden = false;
+    get('empty').hidden = true;
+    get('editor').value = text;
+    get('gutter').textContent = String(
+      text.split('\n').length
+    );
+    get('editor').dispatchEvent(new Event('input'));
+    OMU.record({ type: 'Log', source: 'ChunkLoaderUI',
+      target: 'EditorUI', action: 'PREVIEW_READY', result: 'PASS',
+      status: 200, detail: { name, complete, bytesRead, totalBytes }
+    });
+  }
+});
 
 function toggle(id, buttonId) {
   const node = get(id);
@@ -86,7 +103,10 @@ window.Cluster = Object.freeze({
   openPalette: () => palette.open(),
   palette: () => palette.getState(),
   setPalette: (hex) => palette.setHex(hex),
-  paletteMode: (mode) => palette.setMode(mode)
+  paletteMode: (mode) => palette.setMode(mode),
+  chunkLoading: () => chunks.getState(),
+  setChunkLoading: (enabled) => chunks.setEnabled(enabled),
+  loadFile: (file) => chunks.load(file)
 });
 window.VTE = Object.freeze({
   log: () => OMU.log(),
