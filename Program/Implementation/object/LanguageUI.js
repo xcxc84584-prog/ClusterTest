@@ -1,5 +1,5 @@
 // LanguageUI: DOM adapter. Dictionary is the only translation source.
-import { dictionaries, translate } from '../property/language.js';
+import { dictionaries, translate } from '../property/language.js?v=ocda-p5';
 
 const bindings = {
   menuBtn: ['file', '⌄'],
