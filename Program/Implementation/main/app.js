@@ -52,6 +52,10 @@ tabs = createFileTabsUI({
 files.setBeforeNew(() => tabs.beforeOpen());
 files.setOnNew(() => tabs.addCurrent('untitled.txt'));
 files.setOnClose(() => tabs.closed());
+files.setOnSaved(async (savedFile) => {
+  chunks.attach(savedFile);
+  await chunks.navigate(0);
+});
 
 function toggle(id, buttonId) {
   const node = get(id);
