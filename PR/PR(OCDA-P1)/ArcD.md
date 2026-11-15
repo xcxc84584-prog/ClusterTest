@@ -36,3 +36,9 @@ Browser PASS/FAIL and dependency matrix validation are pending.
 ## P3 update
 - Version synchronized to OCDA-P3 across bootstrap and HTML.
 - Menu state and editor fallback improved; browser E2E pending.
+
+## P6 — Event chain / architecture / EHU
+- Chain: Bootstrap.fetchManifest -> ImportMap.install -> app.import -> LinkCore.publishVersion -> URU.register(Version) -> EDPMU.set(Version) -> OMU.record(VERSION_PUBLISHED,200).
+- New release property: `LinkCore/release.json` is the only version declaration; bootstrap resolves module import URLs.
+- EHU: missing release -> VERSION_MISSING/500; bootstrap fetch failure -> console and document error marker (OMU not yet initialized).
+- Relation: bootstrap initializes LinkCore before UI object construction; no direct version reads from UI modules.
